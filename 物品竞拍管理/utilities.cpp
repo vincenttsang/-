@@ -9,11 +9,13 @@
 #include <sys/stat.h>
 #include <string>
 #include <cstdio>
+#include <iostream>
 #include <fstream>
 using std::string;
 
 bool isFileExist(const std::string& name);
 void GenerateUUID(string &id);
+void clear(void);
 
 void GenerateUUID(string &id){
     char* id_string_in_c_style = new char[200]();
@@ -29,3 +31,8 @@ bool isFileExist(const std::string& name){
     struct stat buffer;
     return (stat (name.c_str(), &buffer) == 0);
 } //使用POSIX stat方式检测文件存在
+
+void clear(void){
+    // CSI[2J clears screen, CSI[H moves the cursor to top-left corner
+    std::cout << "\x1B[2J\x1B[H";
+}

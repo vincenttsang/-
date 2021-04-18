@@ -9,6 +9,7 @@
 #define communication_hpp
 
 #include <stdio.h>
+#include <iostream>
 #include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -66,6 +67,7 @@ public:
                                 boost::bind(&tcp_connection::handle_write, shared_from_this(),
                                             boost::asio::placeholders::error,
                                             boost::asio::placeholders::bytes_transferred));
+        std::cout << "从客户端接收到：" << this->message_ << std::endl;
     }
     
     void do_write(){
@@ -75,6 +77,7 @@ public:
                                  boost::bind(&tcp_connection::handle_write, shared_from_this(),
                                              boost::asio::placeholders::error,
                                              boost::asio::placeholders::bytes_transferred));
+        std::cout << "已发送：" << this->message_ << std::endl;
     }
     
 private:
@@ -106,9 +109,7 @@ private:
         tcp_connection::pointer new_connection =
         tcp_connection::create(io_context_);
         
-        acceptor_.async_accept(new_connection->socket(),
-                               boost::bind(&tcp_server::handle_accept, this, new_connection,
-                                           boost::asio::placeholders::error));
+        acceptor_.async_accept(new_connection->socket(),boost::bind(&tcp_server::handle_accept, this, new_connection, boost::asio::placeholders::error));
     }
     
     void handle_accept(tcp_connection::pointer new_connection,

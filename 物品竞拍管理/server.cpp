@@ -25,7 +25,10 @@ void InitializeConfig(void);
 bool isFileExist(const std::string& name);
 void GenerateUUID(string &id);
 
-int main(int argc, const char * argv[]) {
+//Functions From communication.cpp:
+int server();
+
+int main(int argc, const char * argv[]){
     // insert code here...
     string tmp;
     GenerateUUID(tmp);
@@ -36,7 +39,8 @@ int main(int argc, const char * argv[]) {
         cout << "已生成配置文件" << endl;
     }
     else{
-        cout << "正在从config.json读取设置" << endl;
+        cout << "从config.json读取设置" << endl;
+        server();
     }
     return 0;
 }
