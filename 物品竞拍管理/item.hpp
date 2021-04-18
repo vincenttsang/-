@@ -12,7 +12,6 @@
 #include <string>
 typedef unsigned int item_condition_num;
 typedef bool flag;
-void GenerateUUID(std::string &id);
 
 class Item{
 public:
