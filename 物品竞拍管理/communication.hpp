@@ -10,11 +10,15 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 #include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include <boost/array.hpp>
 #include <nlohmann/json.hpp>
+
+#define BUFFER_SIZE 81920
 
 using boost::asio::ip::tcp;
 using boost::asio::io_context;
@@ -63,15 +67,18 @@ public:
     }
     
     void do_read(){
-        socket_.async_read_some(boost::asio::buffer(message_),
+        buffer_ = new char[BUFFER_SIZE]();
+        socket_.async_read_some(boost::asio::buffer(buffer_, BUFFER_SIZE),
                                 boost::bind(&tcp_connection::handle_write, shared_from_this(),
                                             boost::asio::placeholders::error,
                                             boost::asio::placeholders::bytes_transferred));
-        std::cout << "从客户端接收到：" << this->message_ << std::endl;
+        data_in_string.assign(buffer_);
+        delete [] buffer_;
+        std::cout << "从客户端收到：" << data_in_string << std::endl;
     }
     
     void do_write(){
-        message_ = Respond("test data");
+        message_ = Respond("test data"); //回应客户端
         
         boost::asio::async_write(socket_, boost::asio::buffer(message_),
                                  boost::bind(&tcp_connection::handle_write, shared_from_this(),
@@ -91,6 +98,8 @@ private:
         
     }
     
+    char* buffer_;
+    std::string data_in_string;
     tcp::socket socket_;
     std::string message_;
 };

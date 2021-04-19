@@ -24,6 +24,7 @@ void InitializeConfig(void);
 //Functions From utilities.cpp:
 bool isFileExist(const std::string& name);
 void GenerateUUID(string &id);
+void clear(void);
 
 //Functions From communication.cpp:
 int server();
