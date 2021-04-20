@@ -38,6 +38,7 @@ int main(int argc, const char * argv[]){
         cout << "配置文件不存在" << endl;
         InitializeConfig();
         cout << "已生成配置文件" << endl;
+        server();
     }
     else{
         cout << "从config.json读取设置" << endl;

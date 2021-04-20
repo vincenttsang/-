@@ -30,6 +30,8 @@ bool isFileExist(const std::string& name);
 void GenerateUUID(string &id);
 void clear(void);
 
+std::string ip_address = "127.0.0.1";
+
 int main(int argc, const char * argv[]){
     int op = -1;
     while(op != 0){
@@ -74,6 +76,9 @@ void RecordInformation(void){
     cout << "请输入物品新旧程度数（范围0-10，10为十成新，0为战损版，以此类推）：";
     cin >> condition_num;
     json new_item;
+    new_item["opcode"] = 1;
+    new_item["username"] = "田所浩二";
+    new_item["token"] = "1145141919810";
     new_item["name"] = name;
     new_item["info"] = info;
     new_item["condition_in_num"] = condition_num;
@@ -89,7 +94,7 @@ void send(json j){
         tcp::socket socket(io);
 
         //(2)通过connect函数连接服务器，打开socket连接。
-        tcp::endpoint end_point(boost::asio::ip::address::from_string("127.0.0.1"), 11451);
+        tcp::endpoint end_point(boost::asio::ip::address::from_string(ip_address), 11451);
         socket.connect(end_point);
         
         boost::system::error_code ec;

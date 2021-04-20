@@ -17,23 +17,18 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <nlohmann/json.hpp>
-
+#include "item.hpp"
 #define BUFFER_SIZE 81920
 
 using boost::asio::ip::tcp;
 using boost::asio::io_context;
 using json = nlohmann::json;
 
-json CreateRequest(const std::string op, const std::string data);
+// Functions from utilities.cpp:
+void GenerateUUID(std::string &id);
+
 json StringToJson(const std::string jsonStr);
 std::string JsonToString(const json j);
-
-json CreateRequest(const std::string op, const std::string data){
-    json request;
-    request["Operation"] = op;
-    request["Data"] = data;
-    return request;
-} // For client
 
 std::string Respond(const std::string data){
     return data;
@@ -65,6 +60,25 @@ public:
     tcp::socket& socket(){
         return socket_;
     }
+    void ProcessRequest(std::string str){
+        json request = json::parse(str);
+        int opcode = request["opcode"];
+        std::string username = request["username"];
+        std::string token = request["token"];
+        std::cout << "用户名：" << username << std::endl;
+        std::cout << "用户Token：" << token << std::endl;
+        if(opcode == 1){
+            Item new_item;
+            std::string new_uuid;
+            GenerateUUID(new_uuid);
+            std::cout << "新UUID：" << new_uuid << std::endl;
+            new_item.set_item_name(request["name"]);
+            new_item.set_item_condition(request["condition"]);
+            new_item.set_item_introduction(request["info"]);
+            new_item.set_item_condition_in_number(request["condition_in_num"]);
+            new_item.set_item_uuid(new_uuid);
+        }
+    }
     
     void do_read(){
         buffer_ = new char[BUFFER_SIZE]();
@@ -75,6 +89,8 @@ public:
         data_in_string.assign(buffer_);
         delete [] buffer_;
         std::cout << "从客户端收到：" << data_in_string << std::endl;
+        ProcessRequest(data_in_string);
+        
     }
     
     void do_write(){

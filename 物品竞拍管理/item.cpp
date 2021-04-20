@@ -14,7 +14,7 @@ Item::Item(void){
     }
 } //构造函数
 Item::~Item(void){
-    std::cout << "Fuck\n";
+    std::cout << "成功创建新对象\n";
 } //析构函数
 void Item::set_item_name(std::string name_from_input){
     this->item_name = name_from_input;
