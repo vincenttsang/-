@@ -9,13 +9,17 @@
 #include <sys/stat.h>
 #include <string>
 #include <cstdio>
+#include <chrono>
+#include <ctime>
 #include <iostream>
 #include <fstream>
+#include <array>
 using std::string;
 
-bool isFileExist(const std::string& name);
+bool isFileExist(const string& name);
 void GenerateUUID(string &id);
 void clear(void);
+string GetLocalTime(void);
 
 void GenerateUUID(string &id){
     char* id_string_in_c_style = new char[200]();
@@ -35,4 +39,15 @@ bool isFileExist(const std::string& name){
 void clear(void){
     // CSI[2J clears screen, CSI[H moves the cursor to top-left corner
     std::cout << "\x1B[2J\x1B[H";
+}
+
+string GetLocalTime(void){
+    std::array<char, 64> buffer;
+    buffer.fill(0);
+    time_t rawtime;
+    time(&rawtime);
+    const auto timeinfo = localtime(&rawtime);
+    strftime(buffer.data(), sizeof(buffer), "[%Y/%m/%d %H:%M:%S] ", timeinfo);
+    std::string timeStr(buffer.data());
+    return timeStr;
 }

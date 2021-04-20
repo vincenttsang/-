@@ -15,6 +15,8 @@
 		BF6FC1EE2627DF8E004930CD /* server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1ED2627DF8E004930CD /* server.cpp */; };
 		BF6FC1F32627E073004930CD /* communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1F12627E073004930CD /* communication.cpp */; };
 		BF6FC1F42627E073004930CD /* communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1F12627E073004930CD /* communication.cpp */; };
+		BFB17E3E262F2D33008CA8D9 /* multi-user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */; };
+		BFB17E3F262F2D33008CA8D9 /* multi-user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +51,8 @@
 		BF6FC1ED2627DF8E004930CD /* server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = server.cpp; sourceTree = "<group>"; };
 		BF6FC1F12627E073004930CD /* communication.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = communication.cpp; sourceTree = "<group>"; };
 		BF6FC1F22627E073004930CD /* communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = communication.hpp; sourceTree = "<group>"; };
+		BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "multi-user.cpp"; sourceTree = "<group>"; };
+		BFB17E3D262F2D33008CA8D9 /* multi-user.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "multi-user.hpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +96,8 @@
 			children = (
 				BF6FC1ED2627DF8E004930CD /* server.cpp */,
 				BF6FC1D72627DDA3004930CD /* client.cpp */,
+				BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */,
+				BFB17E3D262F2D33008CA8D9 /* multi-user.hpp */,
 				BF6FC1F12627E073004930CD /* communication.cpp */,
 				BF6FC1F22627E073004930CD /* communication.hpp */,
 				BF2514982627BDCC008736F7 /* item.cpp */,
@@ -178,6 +184,7 @@
 				BF6FC1F32627E073004930CD /* communication.cpp in Sources */,
 				BF6FC1EE2627DF8E004930CD /* server.cpp in Sources */,
 				BF2514A32627C540008736F7 /* utilities.cpp in Sources */,
+				BFB17E3E262F2D33008CA8D9 /* multi-user.cpp in Sources */,
 				BF25149A2627BDCC008736F7 /* item.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -189,6 +196,7 @@
 				BF6FC1F42627E073004930CD /* communication.cpp in Sources */,
 				BF6FC1C82627DD4C004930CD /* utilities.cpp in Sources */,
 				BF6FC1C92627DD4C004930CD /* item.cpp in Sources */,
+				BFB17E3F262F2D33008CA8D9 /* multi-user.cpp in Sources */,
 				BF6FC1D82627DDA3004930CD /* client.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

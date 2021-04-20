@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-int server(){
+int RunServer(){
     try
     {
       boost::asio::io_context io_context;

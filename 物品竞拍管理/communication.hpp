@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <sys/stat.h>
 #include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -24,11 +25,14 @@ using boost::asio::ip::tcp;
 using boost::asio::io_context;
 using json = nlohmann::json;
 
+json StringToJson(const std::string jsonStr);
+std::string JsonToString(const json j);
+
 // Functions from utilities.cpp:
 void GenerateUUID(std::string &id);
 
-json StringToJson(const std::string jsonStr);
-std::string JsonToString(const json j);
+//Functions from multi-user.cpp:
+bool UserLogin(std::string username, std::string token);
 
 std::string Respond(const std::string data){
     return data;
@@ -68,15 +72,21 @@ public:
         std::cout << "用户名：" << username << std::endl;
         std::cout << "用户Token：" << token << std::endl;
         if(opcode == 1){
-            Item new_item;
-            std::string new_uuid;
-            GenerateUUID(new_uuid);
-            std::cout << "新UUID：" << new_uuid << std::endl;
-            new_item.set_item_name(request["name"]);
-            new_item.set_item_condition(request["condition"]);
-            new_item.set_item_introduction(request["info"]);
-            new_item.set_item_condition_in_number(request["condition_in_num"]);
-            new_item.set_item_uuid(new_uuid);
+            if(UserLogin(username, token)){
+                Item new_item;
+                std::string new_uuid;
+                GenerateUUID(new_uuid);
+                std::cout << "新UUID：" << new_uuid << std::endl;
+                new_item.set_item_name(request["name"]);
+                new_item.set_item_condition(request["condition"]);
+                new_item.set_item_introduction(request["info"]);
+                new_item.set_item_condition_in_number(request["condition_in_num"]);
+                new_item.set_item_uuid(new_uuid);
+                mkdir("sb", 0755);
+            }
+            else{
+                std::cout << "用户不存在" << std::endl;
+            }
         }
     }
     

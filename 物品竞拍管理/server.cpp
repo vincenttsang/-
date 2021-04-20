@@ -9,6 +9,8 @@
 #include <fstream>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "item.hpp"
 using string = std::string;
 using json = nlohmann::json;
@@ -25,24 +27,31 @@ void InitializeConfig(void);
 bool isFileExist(const std::string& name);
 void GenerateUUID(string &id);
 void clear(void);
+std::string GetLocalTime(void);
 
 //Functions From communication.cpp:
-int server();
+int RunServer();
 
 int main(int argc, const char * argv[]){
     // insert code here...
     string tmp;
-    GenerateUUID(tmp);
-    std::cout << tmp << std::endl;
     if(!isFileExist("config.json")){
-        cout << "配置文件不存在" << endl;
+        cout << GetLocalTime() << "配置文件不存在" << endl;
         InitializeConfig();
-        cout << "已生成配置文件" << endl;
-        server();
+        cout << GetLocalTime() << "已生成配置文件" << endl;
+        main(1, 0);
     }
     else{
-        cout << "从config.json读取设置" << endl;
-        server();
+        cout << GetLocalTime() << "从config.json读取设置" << endl;
+        if(!isFileExist("saves")){
+            cout << GetLocalTime() <<  "新建用户文件目录" << endl;
+            mkdir("saves", 0755); //创建目录权限为755
+        }
+        else{
+            cout << GetLocalTime() <<  "已找到用户文件目录" << endl;
+            chdir("saves");
+        }
+        RunServer();
     }
     return 0;
 }
