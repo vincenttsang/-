@@ -14,7 +14,7 @@
 		BF6FC1D82627DDA3004930CD /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1D72627DDA3004930CD /* client.cpp */; };
 		BF6FC1EE2627DF8E004930CD /* server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1ED2627DF8E004930CD /* server.cpp */; };
 		BF6FC1F32627E073004930CD /* communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1F12627E073004930CD /* communication.cpp */; };
-		BF6FC1F42627E073004930CD /* communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1F12627E073004930CD /* communication.cpp */; };
+		BFA77D4E26300B510028181B /* multi-user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */; };
 		BFB17E3E262F2D33008CA8D9 /* multi-user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */; };
 /* End PBXBuildFile section */
 
@@ -192,9 +192,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF6FC1F42627E073004930CD /* communication.cpp in Sources */,
 				BF6FC1C82627DD4C004930CD /* utilities.cpp in Sources */,
 				BF6FC1C92627DD4C004930CD /* item.cpp in Sources */,
+				BFA77D4E26300B510028181B /* multi-user.cpp in Sources */,
 				BF6FC1D82627DDA3004930CD /* client.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "item.hpp"
+#include "multi-user.hpp"
 using string = std::string;
 using json = nlohmann::json;
 using std::cout;
@@ -32,6 +33,8 @@ std::string GetLocalTime(void);
 //Functions From communication.cpp:
 int RunServer();
 
+UserList* default_userlist = new UserList;
+
 int main(int argc, const char * argv[]){
     // insert code here...
     string tmp;
@@ -39,20 +42,18 @@ int main(int argc, const char * argv[]){
         cout << GetLocalTime() << "配置文件不存在" << endl;
         InitializeConfig();
         cout << GetLocalTime() << "已生成配置文件" << endl;
-        main(1, 0);
+    }
+    cout << GetLocalTime() << "从config.json读取设置" << endl;
+    if(!isFileExist("saves")){
+        cout << GetLocalTime() <<  "新建用户文件目录" << endl;
+        mkdir("saves", 0755); //创建目录权限为755
+        chdir("saves");
     }
     else{
-        cout << GetLocalTime() << "从config.json读取设置" << endl;
-        if(!isFileExist("saves")){
-            cout << GetLocalTime() <<  "新建用户文件目录" << endl;
-            mkdir("saves", 0755); //创建目录权限为755
-        }
-        else{
-            cout << GetLocalTime() <<  "已找到用户文件目录" << endl;
-            chdir("saves");
-        }
-        RunServer();
+        cout << GetLocalTime() <<  "已找到用户文件目录" << endl;
+        chdir("saves");
     }
+    RunServer();
     return 0;
 }
 
@@ -78,8 +79,4 @@ void InitializeConfig(void){
     config_file.open("config.json");
     config_file << config << std::endl;
     config_file.close();
-}
-
-void NewUserList(void){
-    
 }

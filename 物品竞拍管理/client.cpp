@@ -25,8 +25,8 @@ using json = nlohmann::json;
 #define ERROR -255;
 #define SUCCESS 255;
 int UserMenu(void);
-bool UserLogin(void);
-bool RegisterUser(void);
+bool ClientUserLogin(void);
+bool ClientRegisterUser(void);
 
 //Functions From client.cpp:
 void RecordInformation(void);
@@ -122,7 +122,7 @@ int UserMenu(void){
         scanf("%d", &op);
         switch (op) {
             case 1:
-                if(UserLogin()){
+                if(ClientUserLogin()){
                     cout << "用户登录成功" << endl;
                     return SUCCESS;
                 }
@@ -132,7 +132,7 @@ int UserMenu(void){
                 }
                 break;
             case 2:
-                if(RegisterUser()){
+                if(ClientRegisterUser()){
                     cout << "用户注册成功" << endl;
                     return ERROR;
                 }
@@ -154,10 +154,10 @@ int UserMenu(void){
     return ERROR;
 }
 
-bool UserLogin(void){
+bool ClientUserLogin(void){
     return true;
 }
 
-bool RegisterUser(void){
+bool ClientRegisterUser(void){
     return true;
 }

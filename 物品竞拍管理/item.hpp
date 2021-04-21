@@ -31,4 +31,6 @@ private:
     std::string item_condition; //Flag 3,物品新旧程度说明
     std::string item_introduction; //Flag 4,物品介绍
 };
+
+std::string GetLocalTime(void);
 #endif /* item_hpp */

@@ -19,6 +19,7 @@
 #include <boost/array.hpp>
 #include <nlohmann/json.hpp>
 #include "item.hpp"
+#include "multi-user.hpp"
 #define BUFFER_SIZE 81920
 
 using boost::asio::ip::tcp;
@@ -31,8 +32,6 @@ std::string JsonToString(const json j);
 // Functions from utilities.cpp:
 void GenerateUUID(std::string &id);
 
-//Functions from multi-user.cpp:
-bool UserLogin(std::string username, std::string token);
 
 std::string Respond(const std::string data){
     return data;
@@ -64,53 +63,11 @@ public:
     tcp::socket& socket(){
         return socket_;
     }
-    void ProcessRequest(std::string str){
-        json request = json::parse(str);
-        int opcode = request["opcode"];
-        std::string username = request["username"];
-        std::string token = request["token"];
-        std::cout << "用户名：" << username << std::endl;
-        std::cout << "用户Token：" << token << std::endl;
-        if(opcode == 1){
-            if(UserLogin(username, token)){
-                Item new_item;
-                std::string new_uuid;
-                GenerateUUID(new_uuid);
-                std::cout << "新UUID：" << new_uuid << std::endl;
-                new_item.set_item_name(request["name"]);
-                new_item.set_item_condition(request["condition"]);
-                new_item.set_item_introduction(request["info"]);
-                new_item.set_item_condition_in_number(request["condition_in_num"]);
-                new_item.set_item_uuid(new_uuid);
-            }
-            else{
-                std::cout << "用户不存在" << std::endl;
-            }
-        }
-    }
+    void ProcessRequest(std::string str);
     
-    void do_read(){
-        buffer_ = new char[BUFFER_SIZE]();
-        socket_.async_read_some(boost::asio::buffer(buffer_, BUFFER_SIZE),
-                                boost::bind(&tcp_connection::handle_write, shared_from_this(),
-                                            boost::asio::placeholders::error,
-                                            boost::asio::placeholders::bytes_transferred));
-        data_in_string.assign(buffer_);
-        delete [] buffer_;
-        std::cout << "从客户端收到：" << data_in_string << std::endl;
-        ProcessRequest(data_in_string);
-        
-    }
+    void do_read();
     
-    void do_write(){
-        message_ = Respond("test data"); //回应客户端
-        
-        boost::asio::async_write(socket_, boost::asio::buffer(message_),
-                                 boost::bind(&tcp_connection::handle_write, shared_from_this(),
-                                             boost::asio::placeholders::error,
-                                             boost::asio::placeholders::bytes_transferred));
-        std::cout << "已发送：" << this->message_ << std::endl;
-    }
+    void do_write();
     
 private:
     tcp_connection(boost::asio::io_context& io_context)
