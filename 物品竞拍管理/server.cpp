@@ -79,3 +79,7 @@ void InitializeConfig(void){
     config_file << config << std::endl;
     config_file.close();
 }
+
+void NewUserList(void){
+    
+}

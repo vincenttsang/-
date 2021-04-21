@@ -13,7 +13,6 @@ bool isUserExisting(string username);
 
 bool UserLogin(string username, string token){
     if(isUserExisting(username)){
-        chdir(username.c_str());
         return true;
     }
     else{
@@ -22,10 +21,5 @@ bool UserLogin(string username, string token){
 }
 
 bool isUserExisting(string username){
-    if(isFileExist(username)){
-        return true;
-    }
-    else{
-        return false;
-    }
+    return true;
 }

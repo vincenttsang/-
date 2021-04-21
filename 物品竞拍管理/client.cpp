@@ -22,6 +22,12 @@ using std::cin;
 using std::endl;
 using json = nlohmann::json;
 
+#define ERROR -255;
+#define SUCCESS 255;
+int UserMenu(void);
+bool UserLogin(void);
+bool RegisterUser(void);
+
 //Functions From client.cpp:
 void RecordInformation(void);
 void send(json j);
@@ -33,6 +39,7 @@ void clear(void);
 std::string ip_address = "127.0.0.1";
 
 int main(int argc, const char * argv[]){
+    for(;UserMenu()!=SUCCESS);
     int op = -1;
     while(op != 0){
         cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
@@ -101,6 +108,56 @@ void send(json j){
         socket.write_some(boost::asio::buffer(data), ec);
     }
     catch (std::exception& e){
-        cout<<e.what()<<endl;
+        cout << e.what() << endl;
     }
+}
+
+int UserMenu(void){
+    int op = -1;
+    cout << "欢迎使用物品竞拍管理系统" << endl << "请先登录" << endl;
+    while(op != 0){
+        cout << "1.用户登录\n2.用户注册\n3.退出程序" << endl;
+        cin.clear();
+        fflush(stdin);
+        scanf("%d", &op);
+        switch (op) {
+            case 1:
+                if(UserLogin()){
+                    cout << "用户登录成功" << endl;
+                    return SUCCESS;
+                }
+                else{
+                    cout << "用户不存在" << endl;
+                    return ERROR;
+                }
+                break;
+            case 2:
+                if(RegisterUser()){
+                    cout << "用户注册成功" << endl;
+                    return ERROR;
+                }
+                else{
+                    cout << "用户注册失败" << endl;
+                    return ERROR;
+                }
+                break;
+            case 3:
+                exit(0);
+                break;
+            default:
+                cin.clear();
+                fflush(stdin);
+                return ERROR;
+                break;
+        }
+    }
+    return ERROR;
+}
+
+bool UserLogin(void){
+    return true;
+}
+
+bool RegisterUser(void){
+    return true;
 }

@@ -82,7 +82,6 @@ public:
                 new_item.set_item_introduction(request["info"]);
                 new_item.set_item_condition_in_number(request["condition_in_num"]);
                 new_item.set_item_uuid(new_uuid);
-                mkdir("sb", 0755);
             }
             else{
                 std::cout << "用户不存在" << std::endl;
