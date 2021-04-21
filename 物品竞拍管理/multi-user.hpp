@@ -25,14 +25,20 @@ void GenerateUUID(std::string &id);
 void clear(void);
 std::string GetLocalTime(void);
 
+typedef struct user{
+    std::string name;
+    std::string password;
+}user;
+
 class UserList{
 public:
     UserList(void);
     ~UserList(void);
-    bool add_user(std::string username);
+    bool add_user(std::string username, std::string password);
     bool search_user(std::string username);
+    bool user_login(std::string username, std::string password);
 private:
-    std::vector<std::string> user_list;
+    std::vector<user> user_list;
 };
 
 bool UserLogin(std::string username, std::string token, UserList* default_userlist);

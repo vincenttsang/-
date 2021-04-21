@@ -9,21 +9,40 @@
 #include <iostream>
 #include <string>
 
+extern UserList* default_userlist;
+
 void tcp_connection::ProcessRequest(std::string str){
     json request = json::parse(str);
     int opcode = request["opcode"];
-    std::string username = request["username"];
-    std::string token = request["token"];
-    std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
-    std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
-    std::cout << GetLocalTime() << "来自客户端的物品名 [" << request["name"] << "]" << std::endl;
-    std::cout << GetLocalTime() << "来自客户端的物品介绍 [" << request["info"] << "]" << std::endl;
-    std::cout << GetLocalTime() << "来自客户端的物品新旧程度描述 [" << request["condition"] << "]" << std::endl;
-    std::cout << GetLocalTime() << "来自客户端的物品新旧程度数值 [" << request["condition_in_num"] << "]" << std::endl;
+    if(opcode == 0){
+        std::string username = request["username"];
+        std::string password = request["token"];
+        if(UserLogin(username, password, default_userlist)){
+            std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
+            message_ = Respond("登录成功"); //回应客户端
+            
+            boost::asio::async_write(socket_, boost::asio::buffer(message_),
+                                     boost::bind(&tcp_connection::handle_write, shared_from_this(),
+                                                 boost::asio::placeholders::error,
+                                                 boost::asio::placeholders::bytes_transferred));
+            std::cout << "已发送：" << this->message_ << std::endl;
+        }
+        else{
+            std::cout << GetLocalTime() << "用户 [" << username << "] 登录失败" << std::endl;
+        }
+    }
     if(opcode == 1){
+        std::string username = request["username"];
+        std::string token = request["token"];
+        std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
+        std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
+        std::cout << GetLocalTime() << "来自客户端的物品名 [" << request["name"] << "]" << std::endl;
+        std::cout << GetLocalTime() << "来自客户端的物品介绍 [" << request["info"] << "]" << std::endl;
+        std::cout << GetLocalTime() << "来自客户端的物品新旧程度描述 [" << request["condition"] << "]" << std::endl;
+        std::cout << GetLocalTime() << "来自客户端的物品新旧程度数值 [" << request["condition_in_num"] << "]" << std::endl;
         std::cout << GetLocalTime() << "客户端请求的操作模式为 [录入物品信息]" << std::endl;
-        extern UserList* default_userlist;
         if(UserLogin(username, token, default_userlist)){
+            std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
             Item new_item;
             std::string new_uuid;
             GenerateUUID(new_uuid);
@@ -35,7 +54,7 @@ void tcp_connection::ProcessRequest(std::string str){
             new_item.set_item_uuid(new_uuid);
         }
         else{
-            std::cout << GetLocalTime() << "用户 [" << username << "] 不存在" << std::endl;
+            std::cout << GetLocalTime() << "用户 [" << username << "] 登录失败" << std::endl;
         }
     }
 }
@@ -48,7 +67,8 @@ void tcp_connection::do_read(void){
                                         boost::asio::placeholders::bytes_transferred));
     data_in_string.assign(buffer_);
     delete [] buffer_;
-    std::cout << GetLocalTime() << "从客户端收到请求：" << data_in_string << std::endl;
+    //std::cout << GetLocalTime() << "从客户端收到请求：" << data_in_string << std::endl;
+    std::cout << GetLocalTime() << "收到客户端请求" << std::endl;
     ProcessRequest(data_in_string);
     
 }

@@ -12,6 +12,7 @@
 #include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
@@ -25,7 +26,7 @@ using json = nlohmann::json;
 #define ERROR -255;
 #define SUCCESS 255;
 int UserMenu(void);
-bool ClientUserLogin(void);
+bool ClientUserLogin(std::string username, std::string password);
 bool ClientRegisterUser(void);
 
 //Functions From client.cpp:
@@ -37,6 +38,8 @@ void GenerateUUID(string &id);
 void clear(void);
 
 std::string ip_address = "127.0.0.1";
+std::string username;
+std::string password;
 
 int main(int argc, const char * argv[]){
     for(;UserMenu()!=SUCCESS);
@@ -69,7 +72,7 @@ int main(int argc, const char * argv[]){
 }
 
 void RecordInformation(void){
-    string name,condition,info;
+    std::string name,condition,info;
     int condition_num = 0;
     cout << "请输入物品信息\n";
     cin.clear();
@@ -84,8 +87,8 @@ void RecordInformation(void){
     cin >> condition_num;
     json new_item;
     new_item["opcode"] = 1;
-    new_item["username"] = "田所浩二";
-    new_item["token"] = "1145141919810";
+    new_item["username"] = username;
+    new_item["token"] = password;
     new_item["name"] = name;
     new_item["info"] = info;
     new_item["condition_in_num"] = condition_num;
@@ -106,6 +109,17 @@ void send(json j){
         
         boost::system::error_code ec;
         socket.write_some(boost::asio::buffer(data), ec);
+        boost::array<char, 128> buf;
+        boost::system::error_code error;
+        
+        size_t len = socket.read_some(boost::asio::buffer(buf), error);
+        
+        if (error == boost::asio::error::eof)
+            std::cout << "Connection closed cleanly by peer." << std::endl;
+        else if (error)
+            throw boost::system::system_error(error); // Some other error.
+        
+        std::cout.write(buf.data(), len);
     }
     catch (std::exception& e){
         cout << e.what() << endl;
@@ -120,9 +134,15 @@ int UserMenu(void){
         cin.clear();
         fflush(stdin);
         scanf("%d", &op);
+        cin.clear();
+        fflush(stdin);
         switch (op) {
             case 1:
-                if(ClientUserLogin()){
+                cout << "请输入用户名：";
+                getline(cin,username);
+                cout << "请输入用户密码：";
+                getline(cin,password);
+                if(ClientUserLogin(username, password)){
                     cout << "用户登录成功" << endl;
                     return SUCCESS;
                 }
@@ -154,7 +174,16 @@ int UserMenu(void){
     return ERROR;
 }
 
-bool ClientUserLogin(void){
+bool ClientUserLogin(std::string username, std::string password){
+    json login;
+    login["opcode"] = 0; // 0为登录opcode
+    login["username"] = username;
+    login["token"] = password;
+    login["name"] = 0;
+    login["info"] = 0;
+    login["condition_in_num"] = 0;
+    login["condition"] = 0;
+    send(login);
     return true;
 }
 
