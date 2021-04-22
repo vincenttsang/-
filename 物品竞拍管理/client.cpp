@@ -5,41 +5,40 @@
 //  Created by Vincent Tsang on 15/4/2021.
 //
 
-#include <iostream>
-#include <string>
-#include <cstdio>
-#include <nlohmann/json.hpp>
-#include <boost/bind/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/array.hpp>
-#include <boost/asio.hpp>
+#include "client.hpp"
 
-using boost::asio::ip::tcp;
-using boost::asio::io_context;
-using std::string;
-using std::cout;
-using std::cin;
-using std::endl;
-using json = nlohmann::json;
+client_tcp_connection::client_tcp_connection(){
+    _socket = new tcp::socket(_io);
+    _endpoint = new tcp::endpoint(boost::asio::ip::address::from_string(ip_address), 11451);
+}
 
-#define ERROR -255;
-#define SUCCESS 255;
-int UserMenu(void);
-bool ClientUserLogin(std::string username, std::string password);
-bool ClientRegisterUser(void);
+void client_tcp_connection::client_send(json j){
+    try{
+        std::string data = j.dump();
+        this->_socket->connect(*(this->_endpoint));
+        
+        boost::system::error_code ec;
+        this->_socket->write_some(boost::asio::buffer(data), ec); // 发送数据
+    }
+    catch (std::exception& e){
+        cout << e.what() << endl;
+    }
+}
 
-//Functions From client.cpp:
-void RecordInformation(void);
-void send(json j);
-//Functions From utilities.cpp:
-bool isFileExist(const std::string& name);
-void GenerateUUID(string &id);
-void clear(void);
-
-std::string ip_address = "127.0.0.1";
-std::string username;
-std::string password;
+void client_tcp_connection::client_recv(){
+    string data_from_server;
+    try{
+        boost::array<char, 81920> buf;
+        boost::system::error_code error;
+        size_t len = this->_socket->read_some(boost::asio::buffer(buf), error);
+        
+        data_from_server.assign(buf.data(), len);
+        cout << data_from_server << endl;
+    }
+    catch (std::exception& e){
+        cout << e.what() << endl;
+    }
+}
 
 int main(int argc, const char * argv[]){
     for(;UserMenu()!=SUCCESS);
@@ -69,61 +68,6 @@ int main(int argc, const char * argv[]){
         }
     }
     return 0;
-}
-
-void RecordInformation(void){
-    std::string name,condition,info;
-    int condition_num = 0;
-    cout << "请输入物品信息\n";
-    cin.clear();
-    fflush(stdin);
-    cout << "请输入物品名：";
-    getline(cin,name);
-    cout << "请输入物品描述：";
-    getline(cin,info);
-    cout << "请输入物品新旧程度描述：";
-    getline(cin,condition);
-    cout << "请输入物品新旧程度数（范围0-10，10为十成新，0为战损版，以此类推）：";
-    cin >> condition_num;
-    json new_item;
-    new_item["opcode"] = 1;
-    new_item["username"] = username;
-    new_item["token"] = password;
-    new_item["name"] = name;
-    new_item["info"] = info;
-    new_item["condition_in_num"] = condition_num;
-    new_item["condition"] = condition;
-    send(new_item);
-}
-
-void send(json j){
-    try{
-        std::string data = j.dump();
-        //(1)通过tcp::socket类定义一个tcp client对象socket
-        boost::asio::io_service io;
-        tcp::socket socket(io);
-
-        //(2)通过connect函数连接服务器，打开socket连接。
-        tcp::endpoint end_point(boost::asio::ip::address::from_string(ip_address), 11451);
-        socket.connect(end_point);
-        
-        boost::system::error_code ec;
-        socket.write_some(boost::asio::buffer(data), ec);
-        boost::array<char, 128> buf;
-        boost::system::error_code error;
-        
-        size_t len = socket.read_some(boost::asio::buffer(buf), error);
-        
-        if (error == boost::asio::error::eof)
-            std::cout << "Connection closed cleanly by peer." << std::endl;
-        else if (error)
-            throw boost::system::system_error(error); // Some other error.
-        
-        std::cout.write(buf.data(), len);
-    }
-    catch (std::exception& e){
-        cout << e.what() << endl;
-    }
 }
 
 int UserMenu(void){
@@ -183,10 +127,38 @@ bool ClientUserLogin(std::string username, std::string password){
     login["info"] = 0;
     login["condition_in_num"] = 0;
     login["condition"] = 0;
-    send(login);
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(login);
+    new_connection->client_recv();
+    delete new_connection;
+    return true;
+}
+bool ClientRegisterUser(void){
     return true;
 }
 
-bool ClientRegisterUser(void){
-    return true;
+void RecordInformation(void){
+    json new_item;
+    std::string name,condition,info;
+    int condition_num = 0;
+    cout << "请输入物品信息\n";
+    cin.clear();
+    fflush(stdin);
+    cout << "请输入物品名：";
+    getline(cin,name);
+    cout << "请输入物品描述：";
+    getline(cin,info);
+    cout << "请输入物品新旧程度描述：";
+    getline(cin,condition);
+    cout << "请输入物品新旧程度数（范围0-10，10为十成新，0为战损版，以此类推）：";
+    cin >> condition_num;
+    new_item["opcode"] = 1;
+    new_item["username"] = username;
+    new_item["token"] = password;
+    new_item["name"] = name;
+    new_item["info"] = info;
+    new_item["condition_in_num"] = condition_num;
+    new_item["condition"] = condition;
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(new_item);
 }

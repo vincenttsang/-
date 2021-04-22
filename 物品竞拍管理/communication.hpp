@@ -32,10 +32,7 @@ std::string JsonToString(const json j);
 // Functions from utilities.cpp:
 void GenerateUUID(std::string &id);
 
-
-std::string Respond(const std::string data){
-    return data;
-}
+std::string data_in_string;
 
 json StringToJson(const std::string jsonStr){
     json j = json::parse(jsonStr);
@@ -63,11 +60,9 @@ public:
     tcp::socket& socket(){
         return socket_;
     }
-    void ProcessRequest(std::string str);
-    
     void do_read();
-    
-    void do_write();
+    void do_write(std::string str);
+    void ProcessRequest(std::string str);
     
 private:
     tcp_connection(boost::asio::io_context& io_context)
@@ -81,7 +76,6 @@ private:
     }
     
     char* buffer_;
-    std::string data_in_string;
     tcp::socket socket_;
     std::string message_;
 };
@@ -103,11 +97,11 @@ private:
         acceptor_.async_accept(new_connection->socket(),boost::bind(&tcp_server::handle_accept, this, new_connection, boost::asio::placeholders::error));
     }
     
-    void handle_accept(tcp_connection::pointer new_connection,
-                       const boost::system::error_code& error){
+    void handle_accept(tcp_connection::pointer new_connection, const boost::system::error_code& error){
         if (!error){
             new_connection->do_read();
-            new_connection->do_write();
+            new_connection->ProcessRequest(data_in_string);
+            new_connection->do_write(data_in_string);
         }
         
         start_accept();
