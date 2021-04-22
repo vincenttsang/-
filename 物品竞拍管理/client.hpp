@@ -51,10 +51,12 @@ public:
     client_tcp_connection();
     void client_send(json j);
     void client_recv();
+    void client_process_data(bool& result);
 private:
     boost::asio::io_service _io;
     tcp::endpoint* _endpoint;
     tcp::socket* _socket;
+    std::string data_from_server;
 };
 
 #endif /* client_hpp */

@@ -13,6 +13,9 @@ extern UserList* default_userlist;
 
 void tcp_connection::ProcessRequest(std::string str){
     int opcode = 0;
+    
+    // 将std::string请求变为json对象
+    
     json request;
     try {
         request = json::parse(str);
@@ -21,28 +24,63 @@ void tcp_connection::ProcessRequest(std::string str){
     catch (json::parse_error& ex) {
         std::cerr << "parse error at byte " << ex.byte << std::endl;
     }
+    
+    // opcode 0 登录
+    
     if(opcode == 0){
         try {
             std::string username = request["username"];
             std::string password = request["token"];
+            json response;
+            response["response_code"] = 0; // 0 For ERROR
+            
             if(UserLogin(username, password, default_userlist)){
                 std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
-                data_in_string = "服务器: 登录成功"; // 将要在do_write()回应客户端的内容
+                response["response_code"] = 1; // 1 For SUCCESS
             }
             else{
-                data_in_string = "服务器: FUCK";
+                response["response_code"] = 0;
                 std::cout << GetLocalTime() << "用户 [" << username << "] 登录失败" << std::endl;
             }
+            data_in_string = JsonToString(response); // 将要在do_write()回应客户端的内容
         }
         catch (json::parse_error& ex) {
             std::cerr << "parse error at byte " << ex.byte << std::endl;
         }
     }
     
+    // opcode 114514 新用户注册
+    
+    if(opcode == 114514){
+        try {
+            std::string username = request["username"];
+            std::string password = request["token"];
+            json response;
+            response["response_code"] = 0; // 0 For ERROR
+            
+            if(isUserExisting(username, default_userlist)){
+                std::cout << GetLocalTime() << "注册失败 用户 [" << username << "] 已存在" << std::endl;
+                response["response_code"] = 0; // 用户已存在
+            }
+            else{
+                default_userlist->add_user(username, password);
+                response["response_code"] = 1;
+            }
+            data_in_string = JsonToString(response);
+        }
+        catch (json::parse_error& ex) {
+            std::cerr << "parse error at byte " << ex.byte << std::endl;
+        }
+    }
+    
+    // opcode 1 录入物品
+    
     if(opcode == 1){
         try {
             std::string username = request["username"];
             std::string token = request["token"];
+            json response;
+            
             std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
             std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
             std::cout << GetLocalTime() << "来自客户端的物品名 [" << request["name"] << "]" << std::endl;
@@ -67,6 +105,7 @@ void tcp_connection::ProcessRequest(std::string str){
                 data_in_string = "服务器: FUCK";
                 std::cout << GetLocalTime() << "用户 [" << username << "] 登录失败" << std::endl;
             }
+            
         }
         
         catch (std::exception& e) {

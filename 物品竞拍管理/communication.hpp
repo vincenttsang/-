@@ -44,9 +44,6 @@ std::string JsonToString(const json j){
     return json_in_str;
 }
 
-std::string request_in_string(std::string str){
-    return str;
-}
 
 class tcp_connection
 : public boost::enable_shared_from_this<tcp_connection>{
@@ -110,4 +107,5 @@ private:
     boost::asio::io_context& io_context_;
     tcp::acceptor acceptor_;
 };
+
 #endif /* communication_hpp */

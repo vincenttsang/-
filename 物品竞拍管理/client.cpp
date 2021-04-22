@@ -13,29 +13,46 @@ client_tcp_connection::client_tcp_connection(){
 }
 
 void client_tcp_connection::client_send(json j){
-    try{
+    try {
         std::string data = j.dump();
         this->_socket->connect(*(this->_endpoint));
         
         boost::system::error_code ec;
         this->_socket->write_some(boost::asio::buffer(data), ec); // 发送数据
     }
-    catch (std::exception& e){
+    catch (std::exception& e) {
         cout << e.what() << endl;
     }
 }
 
 void client_tcp_connection::client_recv(){
-    string data_from_server;
-    try{
+    try {
         boost::array<char, 81920> buf;
         boost::system::error_code error;
         size_t len = this->_socket->read_some(boost::asio::buffer(buf), error);
         
-        data_from_server.assign(buf.data(), len);
-        cout << data_from_server << endl;
+        this->data_from_server.assign(buf.data(), len);
+        cout << this->data_from_server << endl;
     }
-    catch (std::exception& e){
+    catch (std::exception& e) {
+        cout << e.what() << endl;
+    }
+}
+
+void client_tcp_connection::client_process_data(bool& result){
+    json response_from_server;
+    int response_code;
+    try {
+        response_from_server = json::parse(this->data_from_server);
+        response_code = response_code_from_server["response_code"];
+        if(response_code == 1){
+            result = true;
+        }
+        if(response_code == 0){
+            result = false;
+        }
+    }
+    catch (std::exception& e) {
         cout << e.what() << endl;
     }
 }
@@ -52,7 +69,7 @@ int main(int argc, const char * argv[]){
         scanf("%d", &op);
         switch (op) {
             case 0:
-                clear();
+                cout << "感谢使用" << endl;
                 return 0;
                 break;
             case 1:
@@ -97,7 +114,7 @@ int UserMenu(void){
                 break;
             case 2:
                 if(ClientRegisterUser()){
-                    cout << "用户注册成功" << endl;
+                    cout << "用户注册成功 请登录注册的账户" << endl;
                     return ERROR;
                 }
                 else{
@@ -106,6 +123,7 @@ int UserMenu(void){
                 }
                 break;
             case 3:
+                cout << "感谢使用" << endl;
                 exit(0);
                 break;
             default:
@@ -120,21 +138,30 @@ int UserMenu(void){
 
 bool ClientUserLogin(std::string username, std::string password){
     json login;
+    bool result;
     login["opcode"] = 0; // 0为登录opcode
     login["username"] = username;
     login["token"] = password;
-    login["name"] = 0;
-    login["info"] = 0;
-    login["condition_in_num"] = 0;
-    login["condition"] = 0;
     client_tcp_connection* new_connection = new client_tcp_connection();
     new_connection->client_send(login);
     new_connection->client_recv();
+    new_connection->client_process_data(result);
     delete new_connection;
-    return true;
+    return result;
 }
-bool ClientRegisterUser(void){
-    return true;
+
+bool ClientRegisterUser(std::string username, std::string password){
+    json reg;
+    bool result;
+    reg["opcode"] = 114514; // 0为登录opcode
+    reg["username"] = username;
+    reg["token"] = password;
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(reg);
+    new_connection->client_recv();
+    new_connection->client_process_data(result);
+    delete new_connection;
+    return result;
 }
 
 void RecordInformation(void){
