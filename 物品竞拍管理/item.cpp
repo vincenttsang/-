@@ -6,22 +6,23 @@
 //
 
 #include "item.hpp"
-#include <iostream>
+
 Item::Item(void){
-    completion_flag = new bool[5];
-    for(int i = 0; i < 5; i++){
-        completion_flag[i] = false;
-    }
 } //构造函数
+
 Item::~Item(void){
-    std::cout << GetLocalTime() << "成功创建新对象\n";
 } //析构函数
+
 void Item::set_item_name(std::string name_from_input){
     this->item_name = name_from_input;
 }
 
+void Item::set_item_owner(std::string owner_from_input){
+    this->item_owner = owner_from_input;
+}
+
 void Item::set_item_uuid(std::string uuid_from_input){
-    this->item_name = uuid_from_input;
+    this->item_uuid = uuid_from_input;
 }
 
 void Item::set_item_condition_in_number(item_condition_num num_from_input){
@@ -34,4 +35,19 @@ void Item::set_item_condition(std::string condition_from_input){
 
 void Item::set_item_introduction(std::string introduction_from_input){
     this->item_introduction = introduction_from_input;
+}
+
+
+void SaveItemToDisk(Item &item, std::string filename){
+    std::ofstream outfile(filename, std::ofstream::binary);
+    boost::archive::binary_oarchive ar(outfile, boost::archive::no_header);
+    ar << boost::serialization::make_binary_object(&item, sizeof(item));
+    outfile.close();
+}
+
+void ReadItemFromDisk(std::string filename, Item &item){
+    std::ifstream file(filename, std::ifstream::binary);
+    boost::archive::binary_iarchive ia(file, boost::archive::no_header);
+    ia >> item;
+    file.close();
 }

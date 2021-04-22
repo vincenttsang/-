@@ -31,7 +31,7 @@ using json = nlohmann::json;
 
 int UserMenu(void);
 bool ClientUserLogin(std::string username, std::string password);
-bool ClientRegisterUser(void);
+bool ClientRegisterUser(std::string username, std::string password);
 
 //Functions From client.cpp:
 void RecordInformation(void);

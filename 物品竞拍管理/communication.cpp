@@ -6,8 +6,6 @@
 //
 
 #include "communication.hpp"
-#include <iostream>
-#include <string>
 
 extern UserList* default_userlist;
 
@@ -79,6 +77,13 @@ void tcp_connection::ProcessRequest(std::string str){
         try {
             std::string username = request["username"];
             std::string token = request["token"];
+            std::string name = request["name"];
+            std::string condition = request["condition"];
+            std::string info = request["info"];
+            std::string filename = "FUCKER"; // 文件名
+            
+            item_condition_num condition_in_num = request["condition_in_num"];
+            
             json response;
             
             std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
@@ -95,11 +100,16 @@ void tcp_connection::ProcessRequest(std::string str){
                 std::string new_uuid;
                 GenerateUUID(new_uuid);
                 std::cout << GetLocalTime() << "给予物品新UUID：" << new_uuid << std::endl;
-                new_item.set_item_name(request["name"]);
-                new_item.set_item_condition(request["condition"]);
-                new_item.set_item_introduction(request["info"]);
-                new_item.set_item_condition_in_number(request["condition_in_num"]);
+                new_item.set_item_name(name);
+                new_item.set_item_owner(username);
+                new_item.set_item_condition(condition);
+                new_item.set_item_introduction(info);
+                new_item.set_item_condition_in_number(condition_in_num);
                 new_item.set_item_uuid(new_uuid);
+                SaveItemToDisk(new_item, filename);
+                Item test_item;
+                ReadItemFromDisk(filename, test_item);
+                
             }
             else{
                 data_in_string = "服务器: FUCK";

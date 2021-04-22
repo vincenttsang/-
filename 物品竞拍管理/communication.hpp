@@ -8,10 +8,13 @@
 #ifndef communication_hpp
 #define communication_hpp
 
-#include <stdio.h>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <cstdio>
 #include <boost/bind/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>

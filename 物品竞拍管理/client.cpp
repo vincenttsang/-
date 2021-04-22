@@ -32,7 +32,7 @@ void client_tcp_connection::client_recv(){
         size_t len = this->_socket->read_some(boost::asio::buffer(buf), error);
         
         this->data_from_server.assign(buf.data(), len);
-        cout << this->data_from_server << endl;
+        // cout << this->data_from_server << endl;
     }
     catch (std::exception& e) {
         cout << e.what() << endl;
@@ -44,7 +44,7 @@ void client_tcp_connection::client_process_data(bool& result){
     int response_code;
     try {
         response_from_server = json::parse(this->data_from_server);
-        response_code = response_code_from_server["response_code"];
+        response_code = response_from_server["response_code"];
         if(response_code == 1){
             result = true;
         }
@@ -108,17 +108,21 @@ int UserMenu(void){
                     return SUCCESS;
                 }
                 else{
-                    cout << "用户不存在" << endl;
+                    cout << "登录失败 请检查你的用户名或密码" << endl;
                     return ERROR;
                 }
                 break;
             case 2:
-                if(ClientRegisterUser()){
+                cout << "请输入用户名：";
+                getline(cin,username);
+                cout << "请输入用户密码：";
+                getline(cin,password);
+                if(ClientRegisterUser(username, password)){
                     cout << "用户注册成功 请登录注册的账户" << endl;
-                    return ERROR;
+                    return ERROR; // 返回登录菜单
                 }
                 else{
-                    cout << "用户注册失败" << endl;
+                    cout << "注册失败 用户名已存在" << endl;
                     return ERROR;
                 }
                 break;
@@ -168,7 +172,7 @@ void RecordInformation(void){
     json new_item;
     std::string name,condition,info;
     int condition_num = 0;
-    cout << "请输入物品信息\n";
+    cout << "请输入物品信息" << endl;
     cin.clear();
     fflush(stdin);
     cout << "请输入物品名：";
