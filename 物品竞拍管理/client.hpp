@@ -20,6 +20,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
+#include "utilities.hpp"
 
 using boost::asio::ip::tcp;
 using boost::asio::io_context;
@@ -37,10 +38,6 @@ bool ClientRegisterUser(std::string username, std::string password);
 void RecordInformation(void);
 void send(json j);
 void recv();
-//Functions From utilities.cpp:
-bool isFileExist(const std::string& name);
-void GenerateUUID(string &id);
-void clear(void);
 
 std::string ip_address = "127.0.0.1";
 std::string username;

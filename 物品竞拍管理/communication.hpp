@@ -23,6 +23,7 @@
 #include <nlohmann/json.hpp>
 #include "item.hpp"
 #include "multi-user.hpp"
+#include "utilities.hpp"
 #define BUFFER_SIZE 81920
 
 using boost::asio::ip::tcp;
@@ -31,9 +32,6 @@ using json = nlohmann::json;
 
 json StringToJson(const std::string jsonStr);
 std::string JsonToString(const json j);
-
-// Functions from utilities.cpp:
-void GenerateUUID(std::string &id);
 
 std::string data_in_string;
 

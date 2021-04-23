@@ -5,21 +5,9 @@
 //  Created by Vincent Tsang on 15/4/2021.
 //
 
-#include <uuid/uuid.h> //在macOS或Linux平台上用于生成UUID
-#include <sys/stat.h>
-#include <string>
-#include <cstdio>
-#include <chrono>
-#include <ctime>
-#include <iostream>
-#include <fstream>
-#include <array>
-using std::string;
+#include "utilities.hpp"
 
-bool isFileExist(const string& name);
-void GenerateUUID(string &id);
-void clear(void);
-string GetLocalTime(void);
+using std::string;
 
 void GenerateUUID(string &id){
     char* id_string_in_c_style = new char[200]();
@@ -48,6 +36,16 @@ string GetLocalTime(void){
     time(&rawtime);
     const auto timeinfo = localtime(&rawtime);
     strftime(buffer.data(), sizeof(buffer), "[%Y/%m/%d %H:%M:%S] ", timeinfo);
-    std::string timeStr(buffer.data());
+    string timeStr(buffer.data());
     return timeStr;
+}
+
+void GenerateFileName(string &name){
+    int i = 0;
+    std::string test_name = std::to_string(i);
+    while(isFileExist(test_name) == true){
+        i += 1;
+        test_name = std::to_string(i);
+    }
+    name = test_name;
 }

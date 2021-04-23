@@ -19,11 +19,7 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <nlohmann/json.hpp>
-
-bool isFileExist(const std::string& name);
-void GenerateUUID(std::string &id);
-void clear(void);
-std::string GetLocalTime(void);
+#include "utilities.hpp"
 
 typedef struct user{
     std::string name;

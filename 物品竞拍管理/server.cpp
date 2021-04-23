@@ -13,13 +13,13 @@
 #include <unistd.h>
 #include "item.hpp"
 #include "multi-user.hpp"
+#include "utilities.hpp"
 using string = std::string;
 using json = nlohmann::json;
 using std::cout;
 using std::endl;
 
 //Functions From server.cpp:
-void CreateNewItem(Item *item);
 void InitializeConfig(void);
 
 //Functions From utilities.cpp:
@@ -47,15 +47,13 @@ int main(int argc, const char * argv[]){
         chdir("saves");
     }
     else{
-        cout << GetLocalTime() <<  "已找到用户文件目录" << endl;
         chdir("saves");
+        cout << GetLocalTime() <<  "已找到用户文件目录" << endl;
+        cout << GetLocalTime() <<  "开始读取物品资料" << endl;
+        
     }
     RunServer();
     return 0;
-}
-
-void CreateNewItem(Item *item){
-    item = new Item;
 }
 
 void InitializeConfig(void){

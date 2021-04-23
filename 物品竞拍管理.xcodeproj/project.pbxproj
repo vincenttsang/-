@@ -45,6 +45,7 @@
 		BF2514982627BDCC008736F7 /* item.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = item.cpp; sourceTree = "<group>"; };
 		BF2514992627BDCC008736F7 /* item.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = item.hpp; sourceTree = "<group>"; };
 		BF2514A22627C540008736F7 /* utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
+		BF486EFF2632C1BD001CB0E9 /* utilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utilities.hpp; sourceTree = "<group>"; };
 		BF554E892630FA5600D89ACE /* client.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = client.hpp; sourceTree = "<group>"; };
 		BF6FC1D02627DD4C004930CD /* 物品竞拍管理客户端 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "物品竞拍管理客户端"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF6FC1D72627DDA3004930CD /* client.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client.cpp; sourceTree = "<group>"; };
@@ -94,6 +95,8 @@
 		BF25148D2627BCAD008736F7 /* 物品竞拍管理 */ = {
 			isa = PBXGroup;
 			children = (
+				BF486EFF2632C1BD001CB0E9 /* utilities.hpp */,
+				BF2514A22627C540008736F7 /* utilities.cpp */,
 				BF6FC1ED2627DF8E004930CD /* server.cpp */,
 				BF6FC1D72627DDA3004930CD /* client.cpp */,
 				BF554E892630FA5600D89ACE /* client.hpp */,
@@ -103,7 +106,6 @@
 				BF6FC1F22627E073004930CD /* communication.hpp */,
 				BF2514982627BDCC008736F7 /* item.cpp */,
 				BF2514992627BDCC008736F7 /* item.hpp */,
-				BF2514A22627C540008736F7 /* utilities.cpp */,
 			);
 			path = "物品竞拍管理";
 			sourceTree = "<group>";

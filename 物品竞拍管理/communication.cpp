@@ -80,7 +80,8 @@ void tcp_connection::ProcessRequest(std::string str){
             std::string name = request["name"];
             std::string condition = request["condition"];
             std::string info = request["info"];
-            std::string filename = "FUCKER"; // 文件名
+            std::string filename;
+            GenerateFileName(filename); // 生成文件名
             
             item_condition_num condition_in_num = request["condition_in_num"];
             
