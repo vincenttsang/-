@@ -12,28 +12,14 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/serialization/binary_object.hpp>
-#include <boost/serialization/serialization.hpp>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 typedef unsigned int item_condition_num;
 typedef bool flag;
 
 class Item{
-private:
-    friend class boost::serialization::access;
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version){
-        ar & item_name;
-        ar & item_owner;
-        ar & item_uuid;
-        ar & item_condition_in_number;
-        ar & item_condition;
-        ar & item_introduction;
-    }
-
 public:
     void set_item_name(std::string name_from_input);
     void set_item_owner(std::string owner_from_input);
@@ -41,6 +27,8 @@ public:
     void set_item_condition_in_number(item_condition_num num_from_input);
     void set_item_condition(std::string condition_from_input);
     void set_item_introduction(std::string introduction_from_input);
+    void SaveToDisk(std::string filename);
+    void ReadFromDisk(std::string filename);
     Item(void);
     ~Item(void);
 
@@ -54,7 +42,5 @@ private:
 };
 
 std::string GetLocalTime(void);
-void SaveItemToDisk(Item &item, std::string filename);
-void ReadItemFromDisk(std::string filename, Item &item);
 
 #endif /* item_hpp */

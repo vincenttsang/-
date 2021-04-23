@@ -20,8 +20,6 @@ using std::endl;
 
 //Functions From server.cpp:
 void CreateNewItem(Item *item);
-void SaveItemToDisk();
-void LoadItemFromDisk();
 void InitializeConfig(void);
 
 //Functions From utilities.cpp:
@@ -37,7 +35,6 @@ UserList* default_userlist = new UserList;
 
 int main(int argc, const char * argv[]){
     // insert code here...
-    string tmp;
     if(!isFileExist("config.json")){
         cout << GetLocalTime() << "配置文件不存在" << endl;
         InitializeConfig();
@@ -61,14 +58,6 @@ void CreateNewItem(Item *item){
     item = new Item;
 }
 
-void LoadItemFromDisk(){
-    
-}
-
-void SaveItemToDisk(){
-    
-}
-
 void InitializeConfig(void){
     json config;
     config["First Run"] = "true";
@@ -77,6 +66,6 @@ void InitializeConfig(void){
     config["Encypted"] = 0;
     std::ofstream config_file;
     config_file.open("config.json");
-    config_file << config << std::endl;
+    config_file << std::setw(4) << config << std::endl;
     config_file.close();
 }

@@ -8,6 +8,12 @@
 #include "item.hpp"
 
 Item::Item(void){
+    item_name = " ";
+    item_owner = " ";
+    item_uuid = " ";
+    item_condition_in_number = 0;
+    item_condition = " ";
+    item_introduction = " ";
 } //构造函数
 
 Item::~Item(void){
@@ -38,16 +44,29 @@ void Item::set_item_introduction(std::string introduction_from_input){
 }
 
 
-void SaveItemToDisk(Item &item, std::string filename){
-    std::ofstream outfile(filename, std::ofstream::binary);
-    boost::archive::binary_oarchive ar(outfile, boost::archive::no_header);
-    ar << boost::serialization::make_binary_object(&item, sizeof(item));
-    outfile.close();
+void Item::SaveToDisk(std::string filename){
+    json obj;
+    std::ofstream obj_file;
+    obj["item_name"] = this->item_name;
+    obj["item_owner"] = this->item_owner;
+    obj["item_uuid"] = this->item_uuid;
+    obj["item_condition_in_number"] = this->item_condition_in_number;
+    obj["item_condition"] = this->item_condition;
+    obj["item_introduction"] = this->item_introduction;
+    obj_file.open(filename);
+    obj_file << std::setw(4) << obj << std::endl;
+    obj_file.close();
 }
 
-void ReadItemFromDisk(std::string filename, Item &item){
-    std::ifstream file(filename, std::ifstream::binary);
-    boost::archive::binary_iarchive ia(file, boost::archive::no_header);
-    ia >> item;
-    file.close();
+void Item::ReadFromDisk(std::string filename){
+    std::ifstream obj_file;
+    obj_file.open(filename);
+    json obj = json::parse(obj_file);
+    this->item_name = obj["item_name"];
+    this->item_owner = obj["item_owner"];
+    this->item_uuid = obj["item_uuid"];
+    this->item_condition_in_number = obj["item_condition_in_number"];
+    this->item_condition = obj["item_condition"];
+    this->item_introduction = obj["item_introduction"];
+    obj_file.close();
 }

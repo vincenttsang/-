@@ -106,13 +106,10 @@ void tcp_connection::ProcessRequest(std::string str){
                 new_item.set_item_introduction(info);
                 new_item.set_item_condition_in_number(condition_in_num);
                 new_item.set_item_uuid(new_uuid);
-                SaveItemToDisk(new_item, filename);
-                Item test_item;
-                ReadItemFromDisk(filename, test_item);
-                
+                new_item.SaveToDisk(filename);
             }
             else{
-                data_in_string = "服务器: FUCK";
+                data_in_string = "服务器: 用户信息有误";
                 std::cout << GetLocalTime() << "用户 [" << username << "] 登录失败" << std::endl;
             }
             
