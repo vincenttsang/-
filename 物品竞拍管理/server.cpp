@@ -5,31 +5,16 @@
 //  Created by Vincent Tsang on 15/4/2021.
 //
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <nlohmann/json.hpp>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "server.hpp"
 #include "item.hpp"
 #include "multi-user.hpp"
+#include "communication.hpp"
 #include "utilities.hpp"
 using string = std::string;
 using json = nlohmann::json;
 using std::cout;
 using std::endl;
 
-//Functions From server.cpp:
-void InitializeConfig(void);
-
-//Functions From utilities.cpp:
-bool isFileExist(const std::string& name);
-void GenerateUUID(string &id);
-void clear(void);
-std::string GetLocalTime(void);
-
-//Functions From communication.cpp:
-int RunServer();
 
 UserList* default_userlist = new UserList;
 

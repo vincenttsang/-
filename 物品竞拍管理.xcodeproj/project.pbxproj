@@ -54,6 +54,7 @@
 		BF6FC1F22627E073004930CD /* communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = communication.hpp; sourceTree = "<group>"; };
 		BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "multi-user.cpp"; sourceTree = "<group>"; };
 		BFB17E3D262F2D33008CA8D9 /* multi-user.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "multi-user.hpp"; sourceTree = "<group>"; };
+		BFFBA3CC2635260A00F67B04 /* server.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = server.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +98,7 @@
 			children = (
 				BF486EFF2632C1BD001CB0E9 /* utilities.hpp */,
 				BF2514A22627C540008736F7 /* utilities.cpp */,
+				BFFBA3CC2635260A00F67B04 /* server.hpp */,
 				BF6FC1ED2627DF8E004930CD /* server.cpp */,
 				BF6FC1D72627DDA3004930CD /* client.cpp */,
 				BF554E892630FA5600D89ACE /* client.hpp */,
