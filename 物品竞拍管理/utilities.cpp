@@ -66,6 +66,25 @@ void LoadItemsFromFiles(void){
     }
 }
 
+void SaveAllItemsToFiles(void){
+    int i = 0;
+    Item* item_ptr;
+    std::string test_name = std::to_string(i);
+    std::string filename;
+    
+    while(isFileExist(test_name) == true){
+        std::remove(test_name.c_str());
+        i += 1;
+        test_name = std::to_string(i);
+    }
+    
+    for (int i = 0; i < item_ptr_vector.size(); i++){
+        item_ptr = item_ptr_vector[i];
+        filename = std::to_string(i);
+        item_ptr->SaveToDisk(filename);
+    }
+}
+
 void LoadAnItem(std::string filename){
     Item* item_ptr = NULL;
     item_ptr = new Item;
@@ -76,6 +95,7 @@ void LoadAnItem(std::string filename){
 Item* SearchInPtrVector(std::string uuid, std::string &filename){
     Item* item_ptr = NULL;
     std::string uuid_from_item;
+    
     for (int i = 0; i < item_ptr_vector.size(); i++){
         item_ptr = item_ptr_vector[i];
         uuid_from_item = item_ptr->show_item_uuid();
@@ -84,5 +104,6 @@ Item* SearchInPtrVector(std::string uuid, std::string &filename){
             break;
         }
     }
+    
     return item_ptr;
 }

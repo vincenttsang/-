@@ -27,7 +27,7 @@ int main(int argc, const char * argv[]){
     cout << GetLocalTime() << "从config.json读取设置" << endl;
     if(!isFileExist("saves")){
         cout << GetLocalTime() <<  "新建用户文件目录" << endl;
-        mkdir("saves", 0755); //创建目录权限为755
+        mkdir("saves", 0755); // 创建目录权限为755
         chdir("saves");
     }
     else{
@@ -36,6 +36,7 @@ int main(int argc, const char * argv[]){
         cout << GetLocalTime() <<  "开始读取物品资料" << endl;
         LoadItemsFromFiles();
         cout << GetLocalTime() <<  "读取物品资料完成" << endl;
+        SaveAllItemsToFiles(); // 重新格式化文件
     }
     RunServer();
     return 0;

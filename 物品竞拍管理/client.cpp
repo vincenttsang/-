@@ -141,6 +141,14 @@ int main(int argc, const char * argv[]){
                     cout << "修改失败\n\n";
                 }
                 break;
+            case 3:
+                if(DeleteInformation()){
+                    cout << "修改完成\n\n";
+                }
+                else{
+                    cout << "修改失败\n\n";
+                }
+                break;
             default:
                 clear();
                 cin.clear();
@@ -238,6 +246,27 @@ bool EditInformation(void){
     edit_item["info"] = info;
     edit_item["condition_in_num"] = condition_num;
     edit_item["condition"] = condition;
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(edit_item);
+    new_connection->client_recv();
+    new_connection->client_process_data(result);
+    delete new_connection;
+    return result;
+}
+
+bool DeleteInformation(void){
+    json edit_item;
+    std::string uuid;
+    unsigned int condition_num = 0;
+    bool result;
+    cout << "请输入一个需要删除物品的UUID" << endl;
+    cin.clear();
+    fflush(stdin);
+    cin >> uuid;
+    edit_item["opcode"] = 3;
+    edit_item["username"] = username;
+    edit_item["token"] = password;
+    edit_item["uuid"] = uuid;
     client_tcp_connection* new_connection = new client_tcp_connection();
     new_connection->client_send(edit_item);
     new_connection->client_recv();

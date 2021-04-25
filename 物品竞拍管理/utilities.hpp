@@ -28,5 +28,6 @@ std::string GetLocalTime(void);
 Item* SearchInPtrVector(std::string uuid, std::string &filename);
 void LoadItemsFromFiles(void);
 void LoadAnItem(std::string filename);
+void SaveAllItemsToFiles(void);
 
 #endif /* utilities_hpp */
