@@ -7,6 +7,7 @@
 
 #ifndef utilities_hpp
 #define utilities_hpp
+
 #include <uuid/uuid.h> //在macOS或Linux平台上用于生成UUID
 #include <sys/stat.h>
 #include <string>
@@ -16,11 +17,16 @@
 #include <iostream>
 #include <fstream>
 #include <array>
+#include <vector>
+#include "item.hpp"
 
 bool isFileExist(const std::string& name);
 void GenerateUUID(std::string &id);
 void GenerateFileName(std::string &name);
 void clear(void);
 std::string GetLocalTime(void);
+Item* SearchInPtrVector(std::string uuid, std::string &filename);
+void LoadItemsFromFiles(void);
+void LoadAnItem(std::string filename);
 
 #endif /* utilities_hpp */

@@ -6,8 +6,16 @@
 //
 
 #include "communication.hpp"
+#include "item.hpp"
+#include "multi-user.hpp"
+#include "utilities.hpp"
+
+using std::vector;
 
 extern UserList* default_userlist;
+extern vector<Item*> item_ptr_vector;
+
+std::string data_in_string;
 
 void tcp_connection::ProcessRequest(std::string str){
     int opcode = 0;
@@ -26,11 +34,11 @@ void tcp_connection::ProcessRequest(std::string str){
     // opcode 0 登录
     
     if(opcode == 0){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
         try {
             std::string username = request["username"];
             std::string password = request["token"];
-            json response;
-            response["response_code"] = 0; // 0 For ERROR
             
             if(UserLogin(username, password, default_userlist)){
                 std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
@@ -74,6 +82,8 @@ void tcp_connection::ProcessRequest(std::string str){
     // opcode 1 录入物品
     
     if(opcode == 1){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
         try {
             std::string username = request["username"];
             std::string token = request["token"];
@@ -81,11 +91,9 @@ void tcp_connection::ProcessRequest(std::string str){
             std::string condition = request["condition"];
             std::string info = request["info"];
             std::string filename;
-            GenerateFileName(filename); // 生成文件名
-            
             item_condition_num condition_in_num = request["condition_in_num"];
             
-            json response;
+            GenerateFileName(filename); // 生成文件名
             
             std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
             std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
@@ -108,18 +116,65 @@ void tcp_connection::ProcessRequest(std::string str){
                 new_item.set_item_condition_in_number(condition_in_num);
                 new_item.set_item_uuid(new_uuid);
                 new_item.SaveToDisk(filename);
+                LoadAnItem(filename);
+                response["response_code"] = 1;
             }
             else{
-                data_in_string = "服务器: 用户信息有误";
                 std::cout << GetLocalTime() << "用户 [" << username << "] 登录失败" << std::endl;
             }
-            
+            data_in_string = JsonToString(response);
         }
         
         catch (std::exception& e) {
           std::cerr << e.what() << std::endl;
         }
     }
+    
+    // opcode 2 修改物品
+    if(opcode == 2){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
+        try {
+            std::string username = request["username"];
+            std::string token = request["token"];
+            std::string uuid = request["uuid"];
+            std::string name = request["name"];
+            std::string condition = request["condition"];
+            std::string info = request["info"];
+            std::string filename;
+            item_condition_num condition_in_num = request["condition_in_num"];
+            
+            std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
+            std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
+            std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
+            std::cout << GetLocalTime() << "客户端请求的操作模式为 [修改物品信息]" << std::endl;
+            Item* item = NULL;
+            item = SearchInPtrVector(uuid, filename);
+            if(item != NULL && UserLogin(username, token, default_userlist)){
+                data_in_string = "服务器: 登录成功";
+                std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
+                std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
+                item->set_item_name(name);
+                item->set_item_owner(username);
+                item->set_item_condition(condition);
+                item->set_item_introduction(info);
+                item->set_item_condition_in_number(condition_in_num);
+                item->SaveToDisk(filename);
+                response["response_code"] = 1;
+                
+            }
+            else{
+                std::cout << GetLocalTime() << "用户 [" << username << "] 修改物品失败" << std::endl;
+            }
+            
+            data_in_string = JsonToString(response);
+        }
+        
+        catch (std::exception& e) {
+          std::cerr << e.what() << std::endl;
+        }
+    }
+    
     
 }
 

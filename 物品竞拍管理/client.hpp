@@ -35,9 +35,8 @@ bool ClientUserLogin(std::string username, std::string password);
 bool ClientRegisterUser(std::string username, std::string password);
 
 //Functions From client.cpp:
-void RecordInformation(void);
-void send(json j);
-void recv();
+bool RecordInformation(void);
+bool EditInformation(void);
 
 std::string ip_address = "127.0.0.1";
 std::string username;

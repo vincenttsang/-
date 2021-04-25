@@ -8,6 +8,9 @@
 #include "utilities.hpp"
 
 using std::string;
+using std::vector;
+
+vector<Item*> item_ptr_vector;
 
 void GenerateUUID(string &id){
     char* id_string_in_c_style = new char[200]();
@@ -48,4 +51,38 @@ void GenerateFileName(string &name){
         test_name = std::to_string(i);
     }
     name = test_name;
+}
+
+void LoadItemsFromFiles(void){
+    int i = 0;
+    Item* item_ptr = NULL;
+    std::string test_name = std::to_string(i);
+    while(isFileExist(test_name) == true){
+        item_ptr = new Item;
+        item_ptr->ReadFromDisk(test_name);
+        item_ptr_vector.push_back(item_ptr);
+        i += 1;
+        test_name = std::to_string(i);
+    }
+}
+
+void LoadAnItem(std::string filename){
+    Item* item_ptr = NULL;
+    item_ptr = new Item;
+    item_ptr->ReadFromDisk(filename);
+    item_ptr_vector.push_back(item_ptr);
+}
+
+Item* SearchInPtrVector(std::string uuid, std::string &filename){
+    Item* item_ptr = NULL;
+    std::string uuid_from_item;
+    for (int i = 0; i < item_ptr_vector.size(); i++){
+        item_ptr = item_ptr_vector[i];
+        uuid_from_item = item_ptr->show_item_uuid();
+        filename = std::to_string(i);
+        if(uuid_from_item.compare(uuid) == 0){
+            break;
+        }
+    }
+    return item_ptr;
 }

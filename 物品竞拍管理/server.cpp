@@ -8,7 +8,6 @@
 #include "server.hpp"
 #include "item.hpp"
 #include "multi-user.hpp"
-#include "communication.hpp"
 #include "utilities.hpp"
 using string = std::string;
 using json = nlohmann::json;
@@ -35,7 +34,8 @@ int main(int argc, const char * argv[]){
         chdir("saves");
         cout << GetLocalTime() <<  "已找到用户文件目录" << endl;
         cout << GetLocalTime() <<  "开始读取物品资料" << endl;
-        
+        LoadItemsFromFiles();
+        cout << GetLocalTime() <<  "读取物品资料完成" << endl;
     }
     RunServer();
     return 0;
@@ -49,6 +49,6 @@ void InitializeConfig(void){
     config["Encypted"] = 0;
     std::ofstream config_file;
     config_file.open("config.json");
-    config_file << std::setw(4) << config << std::endl;
+    config_file << config << std::endl;
     config_file.close();
 }

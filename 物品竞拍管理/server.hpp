@@ -15,6 +15,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 void InitializeConfig(void);
-
+int RunServer();
 
 #endif /* server_hpp */

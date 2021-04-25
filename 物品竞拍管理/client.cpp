@@ -57,36 +57,6 @@ void client_tcp_connection::client_process_data(bool& result){
     }
 }
 
-int main(int argc, const char * argv[]){
-    for(;UserMenu()!=SUCCESS);
-    int op = -1;
-    while(op != 0){
-        cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
-        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.输出指定类型的所有物品" << endl;
-        cout << "0.退出程序" << endl;
-        cin.clear();
-        fflush(stdin);
-        scanf("%d", &op);
-        switch (op) {
-            case 0:
-                cout << "感谢使用" << endl;
-                return 0;
-                break;
-            case 1:
-                RecordInformation();
-                clear();
-                cout << "录入完成\n\n";
-                break;
-            default:
-                clear();
-                cin.clear();
-                fflush(stdin);
-                break;
-        }
-    }
-    return 0;
-}
-
 int UserMenu(void){
     int op = -1;
     cout << "欢迎使用物品竞拍管理系统" << endl << "请先登录" << endl;
@@ -140,6 +110,47 @@ int UserMenu(void){
     return ERROR;
 }
 
+int main(int argc, const char * argv[]){
+    for(;UserMenu()!=SUCCESS);
+    int op = -1;
+    while(op != 0){
+        cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
+        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.输出指定类型的所有物品" << endl;
+        cout << "0.退出程序" << endl;
+        cin.clear();
+        fflush(stdin);
+        scanf("%d", &op);
+        switch (op) {
+            case 0:
+                cout << "感谢使用" << endl;
+                return 0;
+                break;
+            case 1:
+                if(RecordInformation()){
+                    cout << "录入完成\n\n";
+                }
+                else{
+                    cout << "录入失败\n\n";
+                }
+                break;
+            case 2:
+                if(EditInformation()){
+                    cout << "修改完成\n\n";
+                }
+                else{
+                    cout << "修改失败\n\n";
+                }
+                break;
+            default:
+                clear();
+                cin.clear();
+                fflush(stdin);
+                break;
+        }
+    }
+    return 0;
+}
+
 bool ClientUserLogin(std::string username, std::string password){
     json login;
     bool result;
@@ -168,10 +179,11 @@ bool ClientRegisterUser(std::string username, std::string password){
     return result;
 }
 
-void RecordInformation(void){
+bool RecordInformation(void){
     json new_item;
     std::string name,condition,info;
-    int condition_num = 0;
+    unsigned int condition_num = 0;
+    bool result;
     cout << "请输入物品信息" << endl;
     cin.clear();
     fflush(stdin);
@@ -192,4 +204,44 @@ void RecordInformation(void){
     new_item["condition"] = condition;
     client_tcp_connection* new_connection = new client_tcp_connection();
     new_connection->client_send(new_item);
+    new_connection->client_recv();
+    new_connection->client_process_data(result);
+    delete new_connection;
+    return result;
+}
+
+bool EditInformation(void){
+    json edit_item;
+    std::string uuid,name,condition,info;
+    unsigned int condition_num = 0;
+    bool result;
+    cout << "请输入一个需要修改物品的UUID" << endl;
+    cin.clear();
+    fflush(stdin);
+    cin >> uuid;
+    cout << "请重新输入物品信息" << endl;
+    cin.clear();
+    fflush(stdin);
+    cout << "请输入物品名：";
+    getline(cin,name);
+    cout << "请输入物品描述：";
+    getline(cin,info);
+    cout << "请输入物品新旧程度描述：";
+    getline(cin,condition);
+    cout << "请输入物品新旧程度数（范围0-10，10为十成新，0为战损版，以此类推）：";
+    cin >> condition_num;
+    edit_item["opcode"] = 2;
+    edit_item["username"] = username;
+    edit_item["token"] = password;
+    edit_item["uuid"] = uuid;
+    edit_item["name"] = name;
+    edit_item["info"] = info;
+    edit_item["condition_in_num"] = condition_num;
+    edit_item["condition"] = condition;
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(edit_item);
+    new_connection->client_recv();
+    new_connection->client_process_data(result);
+    delete new_connection;
+    return result;
 }

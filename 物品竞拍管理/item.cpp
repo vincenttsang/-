@@ -43,6 +43,9 @@ void Item::set_item_introduction(std::string introduction_from_input){
     this->item_introduction = introduction_from_input;
 }
 
+std::string Item::show_item_uuid(void){
+    return this->item_uuid;
+}
 
 void Item::SaveToDisk(std::string filename){
     json obj;
@@ -59,8 +62,8 @@ void Item::SaveToDisk(std::string filename){
 }
 
 void Item::ReadFromDisk(std::string filename){
-    std::ifstream obj_file;
-    obj_file.open(filename);
+    filename = "./" + filename;
+    std::ifstream obj_file(filename);
     json obj = json::parse(obj_file);
     this->item_name = obj["item_name"];
     this->item_owner = obj["item_owner"];
