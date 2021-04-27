@@ -47,6 +47,14 @@ std::string Item::show_item_uuid(void){
     return this->item_uuid;
 }
 
+std::string Item::show_item_name(void){
+    return this->item_uuid;
+}
+
+std::string Item::show_item_owner(void){
+    return this->item_owner;
+}
+
 void Item::SaveToDisk(std::string filename){
     json obj;
     std::ofstream obj_file;

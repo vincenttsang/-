@@ -28,6 +28,8 @@ public:
     void set_item_condition(std::string condition_from_input);
     void set_item_introduction(std::string introduction_from_input);
     std::string show_item_uuid(void);
+    std::string show_item_name(void);
+    std::string show_item_owner(void);
     void SaveToDisk(std::string filename);
     void ReadFromDisk(std::string filename);
     Item(void);

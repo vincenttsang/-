@@ -37,6 +37,8 @@ bool ClientRegisterUser(std::string username, std::string password);
 //Functions From client.cpp:
 bool RecordInformation(void);
 bool EditInformation(void);
+bool DeleteInformation(void);
+bool ShowItemInformation(void);
 
 std::string ip_address = "127.0.0.1";
 std::string username;
@@ -48,11 +50,13 @@ public:
     void client_send(json j);
     void client_recv();
     void client_process_data(bool& result);
+    void show_recv_json();
 private:
     boost::asio::io_service _io;
     tcp::endpoint* _endpoint;
     tcp::socket* _socket;
     std::string data_from_server;
+    json response_from_server;
 };
 
 #endif /* client_hpp */

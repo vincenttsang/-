@@ -148,20 +148,24 @@ void tcp_connection::ProcessRequest(std::string str){
             std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
             std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
             std::cout << GetLocalTime() << "客户端请求的操作模式为 [修改物品信息]" << std::endl;
-            Item* item = NULL;
-            item = SearchInPtrVector(uuid, filename);
-            if(item != NULL && UserLogin(username, token, default_userlist)){
-                data_in_string = "服务器: 登录成功";
-                std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
-                std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
-                item->set_item_name(name);
-                item->set_item_owner(username);
-                item->set_item_condition(condition);
-                item->set_item_introduction(info);
-                item->set_item_condition_in_number(condition_in_num);
-                item->SaveToDisk(filename);
-                response["response_code"] = 1;
-                
+            
+            if(UserLogin(username, token, default_userlist)){
+                Item* item = NULL;
+                item = SearchInPtrVector(uuid, filename);
+                if(item != NULL){
+                    std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
+                    std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
+                    item->set_item_name(name);
+                    item->set_item_owner(username);
+                    item->set_item_condition(condition);
+                    item->set_item_introduction(info);
+                    item->set_item_condition_in_number(condition_in_num);
+                    item->SaveToDisk(filename);
+                    response["response_code"] = 1;
+                }
+                else{
+                    response["response_code"] = 0;
+                }
             }
             else{
                 std::cout << GetLocalTime() << "用户 [" << username << "] 修改物品失败" << std::endl;
@@ -175,6 +179,48 @@ void tcp_connection::ProcessRequest(std::string str){
         }
     }
     
+    // opcode 3 删除物品
+    if(opcode == 3){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
+        try {
+            std::string username = request["username"];
+            std::string token = request["token"];
+            std::string uuid = request["uuid"];
+            std::string filename;
+            
+            std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
+            std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
+            std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
+            std::cout << GetLocalTime() << "客户端请求的操作模式为 [删除物品]" << std::endl;
+            
+            if(UserLogin(username, token, default_userlist)){
+                Item* item = NULL;
+                item = SearchInPtrVector(uuid, filename);
+                if(item != NULL){
+                    item_ptr_vector.erase(remove(item_ptr_vector.begin(),item_ptr_vector.end(),item),item_ptr_vector.end());
+                    std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
+                    std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
+                    response["response_code"] = 1;
+                    response["name"] = item->show_item_name();
+                    SaveAllItemsToFiles();
+                    delete item;
+                }
+                else{
+                    response["response_code"] = 0;
+                }
+            }
+            else{
+                std::cout << GetLocalTime() << "用户 [" << username << "] 删除物品失败" << std::endl;
+            }
+            
+            data_in_string = JsonToString(response);
+        }
+        
+        catch (std::exception& e) {
+          std::cerr << e.what() << std::endl;
+        }
+    }
     
 }
 
