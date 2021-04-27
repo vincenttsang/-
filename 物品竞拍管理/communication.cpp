@@ -222,7 +222,53 @@ void tcp_connection::ProcessRequest(std::string str){
         }
     }
     
+    // opcode 4 输出指定物品信息
+    if(opcode == 4){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
+        try {
+            std::string username = request["username"];
+            std::string token = request["token"];
+            std::string uuid = request["uuid"];
+            std::string filename;
+            
+            std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
+            std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
+            std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
+            std::cout << GetLocalTime() << "客户端请求的操作模式为 [输出指定物品信息]" << std::endl;
+            
+            if(UserLogin(username, token, default_userlist)){
+                Item* item = NULL;
+                item = SearchInPtrVector(uuid, filename);
+                if(item != NULL){
+                    std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
+                    std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
+                    response["response_code"] = 1;
+                    response["name"] = item->show_item_name();
+                    response["owner"] = item->show_item_owner();
+                    response["info"] = item->show_item_info();
+                    response["condition"] = item->show_item_condition();
+                    response["condititon_in_num"] = item->show_item_condition_in_number();
+                }
+                else{
+                    response["response_code"] = 0;
+                }
+            }
+            else{
+                std::cout << GetLocalTime() << "用户 [" << username << "] 删除物品失败" << std::endl;
+            }
+            
+            data_in_string = JsonToString(response);
+        }
+        
+        catch (std::exception& e) {
+          std::cerr << e.what() << std::endl;
+        }
+    }
+    
 }
+
+
 
 void tcp_connection::do_read(void){
     buffer_ = new char[BUFFER_SIZE]();

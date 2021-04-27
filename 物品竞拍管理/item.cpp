@@ -55,6 +55,18 @@ std::string Item::show_item_owner(void){
     return this->item_owner;
 }
 
+std::string Item::show_item_info(void){
+    return this->item_introduction;
+}
+
+std::string Item::show_item_condition(void){
+    return this->item_condition;
+}
+
+item_condition_num Item::show_item_condition_in_number(void){
+    return this->item_condition_in_number;
+}
+
 void Item::SaveToDisk(std::string filename){
     json obj;
     std::ofstream obj_file;

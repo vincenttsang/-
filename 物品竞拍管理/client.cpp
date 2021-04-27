@@ -56,9 +56,9 @@ void client_tcp_connection::client_process_data(bool& result){
     }
 }
 
-void client_tcp_connection::show_recv_json(){
+json client_tcp_connection::show_recv_json(){
     this->response_from_server = json::parse(this->data_from_server);
-    return this->response_from_server;
+    return response_from_server;
 }
 
 int UserMenu(void){
@@ -119,7 +119,7 @@ int main(int argc, const char * argv[]){
     int op = -1;
     while(op != 0){
         cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
-        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.输出该用户所有的全部物品" << endl;
+        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.开始拍卖" << endl;
         cout << "0.退出程序" << endl;
         cin.clear();
         fflush(stdin);
@@ -154,13 +154,17 @@ int main(int argc, const char * argv[]){
                 }
                 break;
             case 4:
-                if(){
-                    cout << "修改完成\n\n";
-                }
-                else{
-                    cout << "修改失败\n\n";
+                if(!ShowItemInformation()){
+                    cout << "你要查找的物品不存在或不属于你 请核对你输入的UUID\n\n";
                 }
                 break;
+            case 5:
+                if(isAdministrator()){
+                    
+                }
+                else{
+                    cout << "非管理员账户无权限开始拍卖\n\n";
+                }
             default:
                 clear();
                 cin.clear();
@@ -301,21 +305,32 @@ bool ShowItemInformation(void){
     cin.clear();
     fflush(stdin);
     cin >> uuid;
-    show_info["opcode"] = 3;
+    show_info["opcode"] = 4;
     show_info["username"] = username;
     show_info["token"] = password;
     show_info["uuid"] = uuid;
     client_tcp_connection* new_connection = new client_tcp_connection();
-    new_connection->client_send(edit_item);
+    new_connection->client_send(show_info);
     new_connection->client_recv();
     new_connection->client_process_data(result);
     
     if(result){
         json recv = new_connection->show_recv_json();
         std::string name = recv["name"];
-        cout << "已删除名为 [" << name <<"] 的物品";
+        std::string owner = recv["owner"];
+        std::string info = recv["info"];
+        std::string condition = recv["condition"];
+        unsigned int condition_in_num = recv["condititon_in_num"];
+        cout << "物品名：" << name << endl;
+        cout << "物品所有者：" << owner << endl;
+        cout << "物品介绍：" << info << endl;
+        cout << "物品新旧情况：(" << condition_in_num << ") 详细描述：" << condition << endl;
     }
     
     delete new_connection;
     return result;
+}
+
+bool isAdministrator(void){
+    return false;
 }

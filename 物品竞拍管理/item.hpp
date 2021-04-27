@@ -30,6 +30,9 @@ public:
     std::string show_item_uuid(void);
     std::string show_item_name(void);
     std::string show_item_owner(void);
+    std::string show_item_info(void);
+    std::string show_item_condition(void);
+    item_condition_num show_item_condition_in_number(void);
     void SaveToDisk(std::string filename);
     void ReadFromDisk(std::string filename);
     Item(void);
