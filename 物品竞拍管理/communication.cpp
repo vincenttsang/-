@@ -116,7 +116,7 @@ void tcp_connection::ProcessRequest(std::string str){
                 new_item.set_item_condition_in_number(condition_in_num);
                 new_item.set_item_uuid(new_uuid);
                 new_item.SaveToDisk(filename);
-                LoadAnItem(filename);
+                LoadAnItem(filename); // 将新的物品对象放入内存并将地址放入指针容器中
                 response["response_code"] = 1;
             }
             else{
@@ -131,6 +131,7 @@ void tcp_connection::ProcessRequest(std::string str){
     }
     
     // opcode 2 修改物品
+    
     if(opcode == 2){
         json response;
         response["response_code"] = 0; // 0 For ERROR
@@ -152,7 +153,7 @@ void tcp_connection::ProcessRequest(std::string str){
             if(UserLogin(username, token, default_userlist)){
                 Item* item = NULL;
                 item = SearchInPtrVector(uuid, filename);
-                if(item != NULL){
+                if(item != NULL && (item->show_item_owner()) == username){
                     std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
                     std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
                     item->set_item_name(name);
@@ -180,6 +181,7 @@ void tcp_connection::ProcessRequest(std::string str){
     }
     
     // opcode 3 删除物品
+    
     if(opcode == 3){
         json response;
         response["response_code"] = 0; // 0 For ERROR
@@ -197,7 +199,7 @@ void tcp_connection::ProcessRequest(std::string str){
             if(UserLogin(username, token, default_userlist)){
                 Item* item = NULL;
                 item = SearchInPtrVector(uuid, filename);
-                if(item != NULL){
+                if(item != NULL && (item->show_item_owner()) == username){
                     item_ptr_vector.erase(remove(item_ptr_vector.begin(),item_ptr_vector.end(),item),item_ptr_vector.end());
                     std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
                     std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
@@ -223,6 +225,7 @@ void tcp_connection::ProcessRequest(std::string str){
     }
     
     // opcode 4 输出指定物品信息
+    
     if(opcode == 4){
         json response;
         response["response_code"] = 0; // 0 For ERROR
@@ -240,7 +243,7 @@ void tcp_connection::ProcessRequest(std::string str){
             if(UserLogin(username, token, default_userlist)){
                 Item* item = NULL;
                 item = SearchInPtrVector(uuid, filename);
-                if(item != NULL){
+                if(item != NULL && (item->show_item_owner()) == username){
                     std::cout << GetLocalTime() << "用户 [" << username << "] 登录成功" << std::endl;
                     std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
                     response["response_code"] = 1;

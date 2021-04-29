@@ -48,7 +48,7 @@ std::string Item::show_item_uuid(void){
 }
 
 std::string Item::show_item_name(void){
-    return this->item_uuid;
+    return this->item_name;
 }
 
 std::string Item::show_item_owner(void){

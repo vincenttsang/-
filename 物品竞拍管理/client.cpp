@@ -119,7 +119,7 @@ int main(int argc, const char * argv[]){
     int op = -1;
     while(op != 0){
         cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
-        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.开始拍卖" << endl;
+        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.进入拍卖\n6.开始拍卖" << endl;
         cout << "0.退出程序" << endl;
         cin.clear();
         fflush(stdin);
@@ -142,7 +142,7 @@ int main(int argc, const char * argv[]){
                     cout << "修改完成\n\n";
                 }
                 else{
-                    cout << "修改失败\n\n";
+                    cout << "你要修改的物品不存在或不属于你 请核对你输入的UUID\n\n";
                 }
                 break;
             case 3:
@@ -150,7 +150,7 @@ int main(int argc, const char * argv[]){
                     cout << "删除完成\n\n";
                 }
                 else{
-                    cout << "修改失败\n\n";
+                    cout << "你要删除的物品不存在或不属于你 请核对你输入的UUID\n\n;
                 }
                 break;
             case 4:
@@ -159,12 +159,15 @@ int main(int argc, const char * argv[]){
                 }
                 break;
             case 5:
-                if(isAdministrator()){
+                break;
+            case 6:
+                if(StartAuction()){
                     
                 }
                 else{
                     cout << "非管理员账户无权限开始拍卖\n\n";
                 }
+                break;
             default:
                 clear();
                 cin.clear();
@@ -331,6 +334,6 @@ bool ShowItemInformation(void){
     return result;
 }
 
-bool isAdministrator(void){
+bool StartAuction(void){
     return false;
 }

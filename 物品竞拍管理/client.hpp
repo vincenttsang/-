@@ -39,7 +39,7 @@ bool RecordInformation(void);
 bool EditInformation(void);
 bool DeleteInformation(void);
 bool ShowItemInformation(void);
-bool isAdministrator(void);
+bool StartAuction(void);
 
 std::string ip_address = "127.0.0.1";
 std::string username;
