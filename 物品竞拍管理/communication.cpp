@@ -69,7 +69,7 @@ void tcp_connection::ProcessRequest(std::string str){
                 response["response_code"] = 0; // 用户已存在
             }
             else{
-                default_userlist->add_user(username, password);
+                default_userlist->add_user(username, password, false); // 默认非管理员账户
                 response["response_code"] = 1;
             }
             data_in_string = JsonToString(response);

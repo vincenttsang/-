@@ -8,11 +8,12 @@
 #include "multi-user.hpp"
 using string = std::string;
 
-bool UserList::add_user(std::string username, std::string password){
+bool UserList::add_user(std::string username, std::string password, bool administrator){
     if(!search_user(username)){
         user new_user;
         new_user.name = username;
         new_user.password = password;
+        new_user.administrator = administrator;
         this->user_list.push_back(new_user);
         return true;
     }
@@ -48,11 +49,32 @@ bool UserList::user_login(std::string username, std::string password){
 
 UserList::UserList(void){
     std::cout << GetLocalTime() << "已创建用户列表对象" << std::endl;
-    this->add_user("邓佳佳", "114514"); // Debug用 正式发布要删掉
+    this->add_user("邓佳佳", "114514", true); // Debug用 正式发布要删掉
 }
 
 UserList::~UserList(void){
     
+}
+
+void UserList::SaveToDisk(std::string filename, int i){
+    json obj;
+    std::ofstream obj_file;
+    obj["username"] = this->user_list[i].name;
+    obj["password"] = this->user_list[i].password;
+    obj["administrator"] = this->user_list[i].administrator;
+    obj_file.open(filename);
+    obj_file << std::setw(4) << obj << std::endl;
+    obj_file.close();
+}
+
+void UserList::ReadFromDisk(std::string filename, int i){
+    std::ifstream obj_file(filename);
+    json obj = json::parse(obj_file);
+    std::string username = obj["username"];
+    std::string password = obj["password"];
+    bool administrator = obj["administrator"];
+    this->add_user(username, password, administrator);
+    obj_file.close();
 }
 
 bool UserLogin(string username, string token, UserList* default_userlist){

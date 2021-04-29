@@ -10,6 +10,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <sys/stat.h>
@@ -24,15 +25,20 @@
 typedef struct user{
     std::string name;
     std::string password;
+    bool administrator;
 }user;
 
 class UserList{
 public:
     UserList(void);
     ~UserList(void);
-    bool add_user(std::string username, std::string password);
+    bool add_user(std::string username, std::string password, bool administrator);
     bool search_user(std::string username);
     bool user_login(std::string username, std::string password);
+    bool make_user_administrator(std::string username);
+    void SaveToDisk(std::string filename, int i);
+    void ReadFromDisk(std::string filename, int i);
+    
 private:
     std::vector<user> user_list;
 };
