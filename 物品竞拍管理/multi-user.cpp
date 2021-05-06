@@ -49,32 +49,59 @@ bool UserList::user_login(std::string username, std::string password){
 
 UserList::UserList(void){
     std::cout << GetLocalTime() << "已创建用户列表对象" << std::endl;
-    this->add_user("邓佳佳", "114514", true); // Debug用 正式发布要删掉
+    // this->add_user("邓佳佳", "114514", true); // Debug用 正式发布要删掉
+    // this->add_user("曾文翼", "1919810", true);
 }
 
 UserList::~UserList(void){
     
 }
 
-void UserList::SaveToDisk(std::string filename, int i){
+void UserList::SaveToDisk(void){
     json obj;
     std::ofstream obj_file;
-    obj["username"] = this->user_list[i].name;
-    obj["password"] = this->user_list[i].password;
-    obj["administrator"] = this->user_list[i].administrator;
-    obj_file.open(filename);
-    obj_file << std::setw(4) << obj << std::endl;
-    obj_file.close();
+    std::ofstream user_name;
+    user_name.open("users.conf", std::ios::app | std::ios::in);
+    std::string filename;
+    unsigned long j = user_list.size();
+    for(unsigned long i = 0; i<j; i++){
+        user_name << this->user_list[i].name << std::endl;
+        filename = this->user_list[i].name;
+        filename  += ".json";
+        obj["username"] = this->user_list[i].name;
+        obj["password"] = this->user_list[i].password;
+        obj["administrator"] = this->user_list[i].administrator;
+        obj_file.open(filename);
+        obj_file << std::setw(4) << obj << std::endl;
+        obj_file.close();
+    }
 }
 
-void UserList::ReadFromDisk(std::string filename, int i){
-    std::ifstream obj_file(filename);
-    json obj = json::parse(obj_file);
-    std::string username = obj["username"];
-    std::string password = obj["password"];
-    bool administrator = obj["administrator"];
-    this->add_user(username, password, administrator);
-    obj_file.close();
+void UserList::ReadFromDisk(void){
+    if(isFileExist("users.conf")){
+        std::string filename;
+        std::ifstream user_name;
+        std::ifstream obj_file;
+        user_name.open("users.conf", std::ios::in);
+        while(!user_name.eof()){
+            std::getline(user_name, filename);
+            if(filename == "" || filename == "\n"){
+                break;
+            }
+            filename += ".json";
+            obj_file.open(filename);
+            json obj = json::parse(obj_file);
+            std::string username = obj["username"];
+            std::string password = obj["password"];
+            bool administrator = obj["administrator"];
+            this->add_user(username, password, administrator);
+            obj_file.close();
+        }
+    }
+    else{
+        std::ofstream new_userconf("users.conf");
+        new_userconf.close();
+    }
 }
 
 bool UserLogin(string username, string token, UserList* default_userlist){

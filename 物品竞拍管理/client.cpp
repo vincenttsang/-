@@ -150,7 +150,7 @@ int main(int argc, const char * argv[]){
                     cout << "删除完成\n\n";
                 }
                 else{
-                    cout << "你要删除的物品不存在或不属于你 请核对你输入的UUID\n\n;
+                    cout << "你要删除的物品不存在或不属于你 请核对你输入的UUID\n\n";
                 }
                 break;
             case 4:

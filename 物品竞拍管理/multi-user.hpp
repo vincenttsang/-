@@ -36,8 +36,8 @@ public:
     bool search_user(std::string username);
     bool user_login(std::string username, std::string password);
     bool make_user_administrator(std::string username);
-    void SaveToDisk(std::string filename, int i);
-    void ReadFromDisk(std::string filename, int i);
+    void SaveToDisk(void);
+    void ReadFromDisk(void);
     
 private:
     std::vector<user> user_list;
