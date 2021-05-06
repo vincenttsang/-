@@ -6,6 +6,7 @@
 //
 
 #include "item.hpp"
+#include "utilities.hpp"
 
 Item::Item(void){
     item_name = " ";
@@ -14,6 +15,8 @@ Item::Item(void){
     item_condition_in_number = 0;
     item_condition = " ";
     item_introduction = " ";
+    item_price = 0;
+    item_auction_started = false;
 } //构造函数
 
 Item::~Item(void){
@@ -67,29 +70,43 @@ item_condition_num Item::show_item_condition_in_number(void){
     return this->item_condition_in_number;
 }
 
+unsigned long Item::show_item_price(void){
+    return this->item_price;
+}
+
+bool Item::auction_started(void){
+    return this->item_auction_started;
+}
+
 void Item::SaveToDisk(std::string filename){
     json obj;
     std::ofstream obj_file;
+    filename += ".item.json";
     obj["item_name"] = this->item_name;
     obj["item_owner"] = this->item_owner;
     obj["item_uuid"] = this->item_uuid;
     obj["item_condition_in_number"] = this->item_condition_in_number;
     obj["item_condition"] = this->item_condition;
     obj["item_introduction"] = this->item_introduction;
+    obj["item_price"] = this->item_price;
+    obj["item_auction_started"] = this->item_auction_started;
     obj_file.open(filename);
     obj_file << std::setw(4) << obj << std::endl;
     obj_file.close();
 }
 
 void Item::ReadFromDisk(std::string filename){
-    filename = "./" + filename;
-    std::ifstream obj_file(filename);
-    json obj = json::parse(obj_file);
-    this->item_name = obj["item_name"];
-    this->item_owner = obj["item_owner"];
-    this->item_uuid = obj["item_uuid"];
-    this->item_condition_in_number = obj["item_condition_in_number"];
-    this->item_condition = obj["item_condition"];
-    this->item_introduction = obj["item_introduction"];
-    obj_file.close();
+    if(isFileExist(filename)){
+        std::ifstream obj_file(filename);
+        json obj = json::parse(obj_file);
+        this->item_name = obj["item_name"];
+        this->item_owner = obj["item_owner"];
+        this->item_uuid = obj["item_uuid"];
+        this->item_condition_in_number = obj["item_condition_in_number"];
+        this->item_condition = obj["item_condition"];
+        this->item_introduction = obj["item_introduction"];
+        this->item_price = obj["item_price"];
+        this->item_auction_started = obj["item_auction_started"];
+        obj_file.close();
+    }
 }

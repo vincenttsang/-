@@ -8,7 +8,7 @@
 #ifndef utilities_hpp
 #define utilities_hpp
 
-#include <uuid/uuid.h> //在macOS或Linux平台上用于生成UUID
+#include <uuid/uuid.h> // 在macOS或Linux平台上用于生成UUID
 #include <sys/stat.h>
 #include <string>
 #include <cstdio>

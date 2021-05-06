@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9524F3F9-71E2-4842-99D4-489226EE493B"
+            uuid = "DC4D9F68-FA9E-4B51-8E19-850E852786E5"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "&#x7269;&#x54c1;&#x7ade;&#x62cd;&#x7ba1;&#x7406;/multi-user.cpp"
+            filePath = "&#x7269;&#x54c1;&#x7ade;&#x62cd;&#x7ba1;&#x7406;/server.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "UserList::ReadFromDisk()"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "main(argc, argv)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7819271B-3849-42F0-A1AA-CE79FF35B674"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "&#x7269;&#x54c1;&#x7ade;&#x62cd;&#x7ba1;&#x7406;/item.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "Item::ReadFromDisk(filename)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

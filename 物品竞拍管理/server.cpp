@@ -38,7 +38,6 @@ int main(int argc, const char * argv[]){
         cout << GetLocalTime() <<  "读取物品资料完成" << endl;
         SaveAllItemsToFiles(); // 重新格式化文件
         default_userlist->ReadFromDisk();
-        default_userlist->SaveToDisk();
     }
     RunServer();
     return 0;

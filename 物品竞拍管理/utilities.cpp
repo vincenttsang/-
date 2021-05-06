@@ -46,9 +46,11 @@ string GetLocalTime(void){
 void GenerateFileName(string &name){
     int i = 0;
     std::string test_name = std::to_string(i);
+    test_name += ".item.json";
     while(isFileExist(test_name) == true){
         i += 1;
         test_name = std::to_string(i);
+        test_name += ".item.json";
     }
     name = test_name;
 }
@@ -57,12 +59,14 @@ void LoadItemsFromFiles(void){
     int i = 0;
     Item* item_ptr = NULL;
     std::string test_name = std::to_string(i);
+    test_name += ".item.json";
     while(isFileExist(test_name) == true){
         item_ptr = new Item;
         item_ptr->ReadFromDisk(test_name);
         item_ptr_vector.push_back(item_ptr);
         i += 1;
         test_name = std::to_string(i);
+        test_name += ".item.json";
     }
 }
 
@@ -71,11 +75,12 @@ void SaveAllItemsToFiles(void){
     Item* item_ptr;
     std::string test_name = std::to_string(i);
     std::string filename;
-    
+    test_name += ".item.json";
     while(isFileExist(test_name) == true){
         std::remove(test_name.c_str());
         i += 1;
         test_name = std::to_string(i);
+        test_name += ".item.json";
     }
     
     for (int i = 0; i < item_ptr_vector.size(); i++){

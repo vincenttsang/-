@@ -119,7 +119,7 @@ int main(int argc, const char * argv[]){
     int op = -1;
     while(op != 0){
         cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
-        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.进入拍卖\n6.开始拍卖" << endl;
+        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.开始拍卖" << endl;
         cout << "0.退出程序" << endl;
         cin.clear();
         fflush(stdin);
@@ -159,13 +159,11 @@ int main(int argc, const char * argv[]){
                 }
                 break;
             case 5:
-                break;
-            case 6:
                 if(StartAuction()){
                     
                 }
                 else{
-                    cout << "非管理员账户无权限开始拍卖\n\n";
+                    cout << "拍卖失败\n\n";
                 }
                 break;
             default:
@@ -335,5 +333,24 @@ bool ShowItemInformation(void){
 }
 
 bool StartAuction(void){
-    return false;
+    json auction;
+    std::string uuid;
+    bool result;
+    cout << "请输入要拍卖物品的UUID" << endl;
+    fflush(stdin);
+    cin >> uuid;
+    auction["opcode"] = 5;
+    auction["username"] = username;
+    auction["token"] = password;
+    auction["uuid"] = uuid;
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(auction);
+    new_connection->client_recv();
+    new_connection->client_process_data(result);
+    
+    if(result){
+        cout << "已经开始拍卖" << endl;
+    }
+    
+    return result;
 }

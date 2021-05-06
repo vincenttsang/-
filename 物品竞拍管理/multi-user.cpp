@@ -49,8 +49,11 @@ bool UserList::user_login(std::string username, std::string password){
 
 UserList::UserList(void){
     std::cout << GetLocalTime() << "已创建用户列表对象" << std::endl;
-    // this->add_user("邓佳佳", "114514", true); // Debug用 正式发布要删掉
-    // this->add_user("曾文翼", "1919810", true);
+    /* Debug用 正式发布要删掉
+    this->add_user("邓佳佳", "114514", true);
+    this->add_user("曾文翼", "1919810", true);
+     */
+    this->add_user("root", "password", true); // 默认管理员账户
 }
 
 UserList::~UserList(void){
@@ -67,7 +70,7 @@ void UserList::SaveToDisk(void){
     for(unsigned long i = 0; i<j; i++){
         user_name << this->user_list[i].name << std::endl;
         filename = this->user_list[i].name;
-        filename  += ".json";
+        filename  += ".user.json";
         obj["username"] = this->user_list[i].name;
         obj["password"] = this->user_list[i].password;
         obj["administrator"] = this->user_list[i].administrator;
@@ -88,7 +91,7 @@ void UserList::ReadFromDisk(void){
             if(filename == "" || filename == "\n"){
                 break;
             }
-            filename += ".json";
+            filename += ".user.json";
             obj_file.open(filename);
             json obj = json::parse(obj_file);
             std::string username = obj["username"];
