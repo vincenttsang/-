@@ -7,6 +7,8 @@
 
 #include "client.hpp"
 
+unsigned long seconds = 0;
+
 client_tcp_connection::client_tcp_connection(){
     _socket = new tcp::socket(_io);
     _endpoint = new tcp::endpoint(boost::asio::ip::address::from_string(ip_address), 11451);
@@ -119,7 +121,7 @@ int main(int argc, const char * argv[]){
     int op = -1;
     while(op != 0){
         cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
-        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.开始拍卖" << endl;
+        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.使用管理员账户开始拍卖\n6.普通用户进入拍卖" << endl;
         cout << "0.退出程序" << endl;
         cin.clear();
         fflush(stdin);
@@ -342,10 +344,14 @@ bool StartAuction(void){
     cout << "请输入要拍卖物品的UUID" << endl;
     fflush(stdin);
     cin >> uuid;
+    cout << "请输入拍卖时长（单位：秒）：" << endl;
+    fflush(stdin);
+    cin >> seconds;
     auction["opcode"] = 5;
     auction["username"] = username;
     auction["token"] = password;
     auction["uuid"] = uuid;
+    auction["seconds"] = seconds;
     client_tcp_connection* new_connection = new client_tcp_connection();
     new_connection->client_send(auction);
     new_connection->client_recv();
@@ -378,6 +384,7 @@ int BidMenu(void){
     bid["opcode"] = 6;
     bid["username"] = username;
     bid["token"] = password;
+    bid["price"] = price;
     bid["uuid"] = uuid;
     
     client_tcp_connection* new_connection = new client_tcp_connection();

@@ -52,7 +52,7 @@ void GenerateFileName(string &name){
         test_name = std::to_string(i);
         test_name += ".item.json";
     }
-    name = test_name;
+    name = std::to_string(i);
 }
 
 void LoadItemsFromFiles(void){
@@ -93,6 +93,7 @@ void SaveAllItemsToFiles(void){
 void LoadAnItem(std::string filename){
     Item* item_ptr = NULL;
     item_ptr = new Item;
+    filename += ".item.json";
     item_ptr->ReadFromDisk(filename);
     item_ptr_vector.push_back(item_ptr);
 }

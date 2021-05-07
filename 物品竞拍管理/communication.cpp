@@ -9,7 +9,6 @@
 #include "item.hpp"
 #include "multi-user.hpp"
 #include "utilities.hpp"
-#include "auction.hpp"
 
 using std::vector;
 
@@ -19,6 +18,7 @@ extern bool out_of_time;
 extern unsigned long new_price;
 
 std::string data_in_string;
+unsigned long seconds = 0;
 
 void tcp_connection::ProcessRequest(std::string str){
     int opcode = 0;
@@ -282,6 +282,7 @@ void tcp_connection::ProcessRequest(std::string str){
             std::string username = request["username"];
             std::string token = request["token"];
             std::string uuid = request["uuid"];
+            seconds = request["seconds"];
             std::string filename;
             
             std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
@@ -298,9 +299,9 @@ void tcp_connection::ProcessRequest(std::string str){
                     item->set_item_price(0);
                     item->start_auction();
                     item->SaveToDisk(filename);
-                    std::thread auction_thr(AuctionProc, uuid);
-                    response["response_code"] = 1;
+                    std::thread auction_thr(AuctionProc, uuid, seconds);
                     auction_thr.detach();
+                    response["response_code"] = 1;
                 }
                 else{
                     response["response_code"] = 0;
@@ -341,10 +342,10 @@ void tcp_connection::ProcessRequest(std::string str){
                 if(item != NULL){
                     std::cout << GetLocalTime() << "客户 [" << username << "] 登录成功" << std::endl;
                     std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
-                    item->set_item_price(0);
+                    item->set_item_price(new_price);
                     item->start_auction();
                     item->SaveToDisk(filename);
-                    std::thread auction_thr(AuctionProc, uuid);
+                    std::thread auction_thr(AuctionProc, uuid, seconds);
                     response["response_code"] = 1;
                     auction_thr.detach();
                 }

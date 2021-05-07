@@ -24,8 +24,8 @@ void AuctionProc(string uuid, unsigned int seconds){
     string filename;
     Item* item = NULL;
     item = SearchInPtrVector(uuid, filename);
-    // std::thread timer_thr(timer, seconds, out_of_time);
-    // timer_thr.detach();
+    std::thread timer_thr(std::ref(timer), std::ref(seconds), std::ref(out_of_time));
+    timer_thr.detach();
     while(out_of_time == false){
         UpdatePrice(item, new_price);
         sleep(1);

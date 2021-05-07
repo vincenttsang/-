@@ -21,12 +21,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
-#include <boost/array.hpp>
 #include <nlohmann/json.hpp>
 #include "item.hpp"
 using json = nlohmann::json;
 
-void AuctionProc(std::string uuid);
+void AuctionProc(std::string uuid, unsigned int seconds);
 void timer(unsigned int time, bool& out_of_time);
 bool UpdatePrice(Item* item, unsigned long new_price);
 

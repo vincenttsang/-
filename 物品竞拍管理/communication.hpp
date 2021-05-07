@@ -22,6 +22,7 @@
 #include <boost/array.hpp>
 #include <nlohmann/json.hpp>
 #include <thread>
+#include "auction.hpp"
 #define BUFFER_SIZE 81920
 
 using boost::asio::ip::tcp;
