@@ -368,7 +368,6 @@ int BidMenu(void){
     json bid;
     std::string uuid;
     unsigned long price;
-    unsigned int condition_num = 0;
     bool result;
     
     cout << "————————出价菜单————————" << endl;

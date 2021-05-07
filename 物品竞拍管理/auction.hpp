@@ -25,8 +25,6 @@
 #include "item.hpp"
 using json = nlohmann::json;
 
-void AuctionProc(std::string uuid, unsigned int seconds);
 void timer(unsigned int time, bool& out_of_time);
-bool UpdatePrice(Item* item, unsigned long new_price);
 
 #endif /* auction_hpp */

@@ -109,6 +109,9 @@ Item* SearchInPtrVector(std::string uuid, std::string &filename){
         if(uuid_from_item.compare(uuid) == 0){
             break;
         }
+        else{
+            item_ptr = NULL;
+        }
     }
     
     return item_ptr;

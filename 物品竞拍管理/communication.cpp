@@ -296,11 +296,10 @@ void tcp_connection::ProcessRequest(std::string str){
                 if(item != NULL && isAdminUser(username, default_userlist)){
                     std::cout << GetLocalTime() << "管理员 [" << username << "] 登录成功" << std::endl;
                     std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
-                    item->set_item_price(0);
                     item->start_auction();
                     item->SaveToDisk(filename);
-                    std::thread auction_thr(AuctionProc, uuid, seconds);
-                    auction_thr.detach();
+                    std::thread timer_thr(timer, seconds, std::ref(out_of_time));
+                    timer_thr.detach();
                     response["response_code"] = 1;
                 }
                 else{
@@ -334,20 +333,23 @@ void tcp_connection::ProcessRequest(std::string str){
             std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
             std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
             std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
-            std::cout << GetLocalTime() << "客户端请求的操作模式为 [开始拍卖]" << std::endl;
+            std::cout << GetLocalTime() << "客户端请求的操作模式为 [拍卖出价]" << std::endl;
             
             if(UserLogin(username, token, default_userlist)){
                 Item* item = NULL;
                 item = SearchInPtrVector(uuid, filename);
-                if(item != NULL){
+                if(item != NULL && out_of_time == false){
                     std::cout << GetLocalTime() << "客户 [" << username << "] 登录成功" << std::endl;
                     std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
-                    item->set_item_price(new_price);
-                    item->start_auction();
-                    item->SaveToDisk(filename);
-                    std::thread auction_thr(AuctionProc, uuid, seconds);
-                    response["response_code"] = 1;
-                    auction_thr.detach();
+                    if((item->show_item_price()) < new_price){
+                        item->set_item_price(new_price);
+                        item->set_item_owner(username);
+                        item->SaveToDisk(filename);
+                        response["response_code"] = 1;
+                    }
+                    else{
+                        response["response_code"] = 0;
+                    }
                 }
                 else{
                     response["response_code"] = 0;
