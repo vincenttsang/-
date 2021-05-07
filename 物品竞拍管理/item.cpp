@@ -74,7 +74,19 @@ unsigned long Item::show_item_price(void){
     return this->item_price;
 }
 
-bool Item::auction_started(void){
+void Item::set_item_price(unsigned long price){
+    this->item_price = price;
+}
+
+void Item::start_auction(void){
+    this->item_auction_started = true;
+}
+
+void Item::stop_auction(void){
+    this->item_auction_started = false;
+}
+
+bool Item::is_auction_started(void){
     return this->item_auction_started;
 }
 

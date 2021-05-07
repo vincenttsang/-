@@ -41,10 +41,22 @@ bool UserList::search_user(std::string username){
 bool UserList::user_login(std::string username, std::string password){
     for(auto iter = this->user_list.begin(); iter != this->user_list.end(); iter++){
         if( (username.compare(iter->name) == 0) && (password.compare(iter->password) == 0) ){
-            return true; //密码正确
+            return true; // 密码正确
         }
     }
     return false; // 密码错误
+}
+
+bool UserList::user_admin(std::string username){
+    for(auto iter = this->user_list.begin(); iter != this->user_list.end(); iter++){
+        if(username.compare(iter->name) == 0){
+            if(iter->administrator){
+                return true; // 是管理员
+            }
+            return false;
+        }
+    }
+    return false;
 }
 
 UserList::UserList(void){
@@ -64,7 +76,7 @@ void UserList::SaveToDisk(void){
     json obj;
     std::ofstream obj_file;
     std::ofstream user_name;
-    user_name.open("users.conf", std::ios::app | std::ios::in);
+    user_name.open("users.conf", std::ios::trunc | std::ios::out);
     std::string filename;
     unsigned long j = user_list.size();
     for(unsigned long i = 0; i<j; i++){
@@ -129,4 +141,8 @@ bool isUserExisting(string username, UserList* default_userlist){
     else{
         return false;
     }
+}
+
+bool isAdminUser(string username, UserList* default_userlist){
+    return default_userlist->user_admin(username);
 }

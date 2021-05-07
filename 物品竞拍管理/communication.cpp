@@ -9,11 +9,14 @@
 #include "item.hpp"
 #include "multi-user.hpp"
 #include "utilities.hpp"
+#include "auction.hpp"
 
 using std::vector;
 
 extern UserList* default_userlist;
 extern vector<Item*> item_ptr_vector;
+extern bool out_of_time;
+extern unsigned long new_price;
 
 std::string data_in_string;
 
@@ -71,6 +74,7 @@ void tcp_connection::ProcessRequest(std::string str){
             else{
                 default_userlist->add_user(username, password, false); // 默认非管理员账户
                 response["response_code"] = 1;
+                default_userlist->SaveToDisk();
             }
             data_in_string = JsonToString(response);
         }
@@ -259,6 +263,97 @@ void tcp_connection::ProcessRequest(std::string str){
             }
             else{
                 std::cout << GetLocalTime() << "用户 [" << username << "] 删除物品失败" << std::endl;
+            }
+            
+            data_in_string = JsonToString(response);
+        }
+        
+        catch (std::exception& e) {
+          std::cerr << e.what() << std::endl;
+        }
+    }
+    
+    // opcode 5 开始拍卖
+    
+    if(opcode == 5){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
+        try {
+            std::string username = request["username"];
+            std::string token = request["token"];
+            std::string uuid = request["uuid"];
+            std::string filename;
+            
+            std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
+            std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
+            std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
+            std::cout << GetLocalTime() << "客户端请求的操作模式为 [开始拍卖]" << std::endl;
+            
+            if(UserLogin(username, token, default_userlist)){
+                Item* item = NULL;
+                item = SearchInPtrVector(uuid, filename);
+                if(item != NULL && isAdminUser(username, default_userlist)){
+                    std::cout << GetLocalTime() << "管理员 [" << username << "] 登录成功" << std::endl;
+                    std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
+                    item->set_item_price(0);
+                    item->start_auction();
+                    item->SaveToDisk(filename);
+                    std::thread auction_thr(AuctionProc, uuid);
+                    response["response_code"] = 1;
+                    auction_thr.detach();
+                }
+                else{
+                    response["response_code"] = 0;
+                }
+            }
+            else{
+                std::cout << GetLocalTime() << "用户 [" << username << "] 不能开始拍卖" << std::endl;
+            }
+            
+            data_in_string = JsonToString(response);
+        }
+        
+        catch (std::exception& e) {
+          std::cerr << e.what() << std::endl;
+        }
+    }
+    
+    // opcode 6 拍卖出价
+    
+    if(opcode == 6){
+        json response;
+        response["response_code"] = 0; // 0 For ERROR
+        try {
+            std::string username = request["username"];
+            std::string token = request["token"];
+            std::string uuid = request["uuid"];
+            new_price = request["price"];
+            std::string filename;
+            
+            std::cout << GetLocalTime() << "来自客户端的用户名 [" << username << "]" <<std::endl;
+            std::cout << GetLocalTime() << "来自客户端的用户密码 [" << token << "]" << std::endl;
+            std::cout << GetLocalTime() << "来自客户端的物品UUID [" << request["uuid"] << "]" << std::endl;
+            std::cout << GetLocalTime() << "客户端请求的操作模式为 [开始拍卖]" << std::endl;
+            
+            if(UserLogin(username, token, default_userlist)){
+                Item* item = NULL;
+                item = SearchInPtrVector(uuid, filename);
+                if(item != NULL){
+                    std::cout << GetLocalTime() << "客户 [" << username << "] 登录成功" << std::endl;
+                    std::cout << GetLocalTime() << "物品UUID：" << item->show_item_uuid() << std::endl;
+                    item->set_item_price(0);
+                    item->start_auction();
+                    item->SaveToDisk(filename);
+                    std::thread auction_thr(AuctionProc, uuid);
+                    response["response_code"] = 1;
+                    auction_thr.detach();
+                }
+                else{
+                    response["response_code"] = 0;
+                }
+            }
+            else{
+                std::cout << GetLocalTime() << "用户 [" << username << "] 不能开始拍卖" << std::endl;
             }
             
             data_in_string = JsonToString(response);

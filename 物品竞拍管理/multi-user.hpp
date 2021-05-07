@@ -35,6 +35,7 @@ public:
     bool add_user(std::string username, std::string password, bool administrator);
     bool search_user(std::string username);
     bool user_login(std::string username, std::string password);
+    bool user_admin(std::string username);
     bool make_user_administrator(std::string username);
     void SaveToDisk(void);
     void ReadFromDisk(void);
@@ -45,5 +46,6 @@ private:
 
 bool UserLogin(std::string username, std::string token, UserList* default_userlist);
 bool isUserExisting(std::string username, UserList* default_userlist);
+bool isAdminUser(std::string username, UserList* default_userlist);
 
 #endif /* multi_user_hpp */

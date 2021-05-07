@@ -16,6 +16,7 @@
 		BF6FC1F32627E073004930CD /* communication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BF6FC1F12627E073004930CD /* communication.cpp */; };
 		BFA77D4E26300B510028181B /* multi-user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */; };
 		BFB17E3E262F2D33008CA8D9 /* multi-user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */; };
+		BFC9AD4C26450424001FE47D /* auction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BFC9AD4A26450424001FE47D /* auction.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,8 @@
 		BF6FC1F22627E073004930CD /* communication.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = communication.hpp; sourceTree = "<group>"; };
 		BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "multi-user.cpp"; sourceTree = "<group>"; };
 		BFB17E3D262F2D33008CA8D9 /* multi-user.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "multi-user.hpp"; sourceTree = "<group>"; };
+		BFC9AD4A26450424001FE47D /* auction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = auction.cpp; sourceTree = "<group>"; };
+		BFC9AD4B26450424001FE47D /* auction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = auction.hpp; sourceTree = "<group>"; };
 		BFFBA3CC2635260A00F67B04 /* server.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = server.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +108,8 @@
 				BFB17E3C262F2D33008CA8D9 /* multi-user.cpp */,
 				BFB17E3D262F2D33008CA8D9 /* multi-user.hpp */,
 				BF6FC1F12627E073004930CD /* communication.cpp */,
+				BFC9AD4A26450424001FE47D /* auction.cpp */,
+				BFC9AD4B26450424001FE47D /* auction.hpp */,
 				BF6FC1F22627E073004930CD /* communication.hpp */,
 				BF2514982627BDCC008736F7 /* item.cpp */,
 				BF2514992627BDCC008736F7 /* item.hpp */,
@@ -191,6 +196,7 @@
 				BF2514A32627C540008736F7 /* utilities.cpp in Sources */,
 				BFB17E3E262F2D33008CA8D9 /* multi-user.cpp in Sources */,
 				BF25149A2627BDCC008736F7 /* item.cpp in Sources */,
+				BFC9AD4C26450424001FE47D /* auction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

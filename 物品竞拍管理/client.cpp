@@ -166,6 +166,9 @@ int main(int argc, const char * argv[]){
                     cout << "拍卖失败\n\n";
                 }
                 break;
+            case 6:
+                BidMenu();
+                break;
             default:
                 clear();
                 cin.clear();
@@ -353,4 +356,41 @@ bool StartAuction(void){
     }
     
     return result;
+}
+
+int BidMenu(void){
+    json bid;
+    std::string uuid;
+    unsigned long price;
+    unsigned int condition_num = 0;
+    bool result;
+    
+    cout << "————————出价菜单————————" << endl;
+    cout << "请输入目标物品的UUID：" << endl;
+    cin.clear();
+    fflush(stdin);
+    cin >> uuid;
+    cout << "输入您的出价：" << endl;
+    cin.clear();
+    fflush(stdin);
+    cin >> price;
+    
+    bid["opcode"] = 6;
+    bid["username"] = username;
+    bid["token"] = password;
+    bid["uuid"] = uuid;
+    
+    client_tcp_connection* new_connection = new client_tcp_connection();
+    new_connection->client_send(bid);
+    new_connection->client_recv();
+    new_connection->client_process_data(result);
+    delete new_connection;
+    
+    if(result){
+        cout << "出价成功 现价格为：" << price << endl;
+    }
+    else{
+        cout << "出价失败" << endl;
+    }
+    return 0;
 }

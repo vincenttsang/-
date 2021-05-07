@@ -27,13 +27,16 @@ public:
     void set_item_condition_in_number(item_condition_num num_from_input);
     void set_item_condition(std::string condition_from_input);
     void set_item_introduction(std::string introduction_from_input);
+    void set_item_price(unsigned long price);
+    void start_auction(void);
+    void stop_auction(void);
     std::string show_item_uuid(void);
     std::string show_item_name(void);
     std::string show_item_owner(void);
     std::string show_item_info(void);
     std::string show_item_condition(void);
     unsigned long show_item_price(void);
-    bool auction_started(void);
+    bool is_auction_started(void);
     item_condition_num show_item_condition_in_number(void);
     void SaveToDisk(std::string filename);
     void ReadFromDisk(std::string filename);
