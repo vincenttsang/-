@@ -59,8 +59,15 @@ void client_tcp_connection::client_process_data(bool& result){
 }
 
 json client_tcp_connection::show_recv_json(){
-    this->response_from_server = json::parse(this->data_from_server);
-    return response_from_server;
+    try {
+        this->response_from_server = json::parse(this->data_from_server);
+        return response_from_server;
+    }
+    catch (std::exception& e) {
+        cout << e.what() << endl;
+        json j;
+        return j;
+    }
 }
 
 int UserMenu(void){
@@ -121,7 +128,7 @@ int main(int argc, const char * argv[]){
     int op = -1;
     while(op != 0){
         cout << "欢迎使用物品竞拍管理系统" << endl << "请从菜单中选择功能：" << endl;
-        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.使用管理员账户开始拍卖\n6.普通用户进入拍卖" << endl;
+        cout << "1.录入物品信息\n2.修改物品信息\n3.删除物品\n4.显示物品信息\n5.使用管理员账户开始拍卖\n6.普通用户进入拍卖\n7.管理员列出所有物品" << endl;
         cout << "0.退出程序" << endl;
         cin.clear();
         fflush(stdin);
@@ -161,16 +168,17 @@ int main(int argc, const char * argv[]){
                 }
                 break;
             case 5:
-                if(StartAuction()){
-                    
-                }
-                else{
+                if(!StartAuction()){
                     cout << "拍卖失败\n\n";
                 }
                 break;
             case 6:
                 BidMenu();
                 break;
+            case 7:
+                if(!AdminLoadItems()){
+                    
+                }
             default:
                 clear();
                 cin.clear();
@@ -375,28 +383,88 @@ int BidMenu(void){
     cin.clear();
     fflush(stdin);
     cin >> uuid;
-    cout << "输入您的出价：" << endl;
-    cin.clear();
-    fflush(stdin);
-    cin >> price;
+    client_tcp_connection* check_item = new client_tcp_connection();
+    json show_info;
+    show_info["opcode"] = 44;
+    show_info["username"] = username;
+    show_info["token"] = password;
+    show_info["uuid"] = uuid;
     
-    bid["opcode"] = 6;
-    bid["username"] = username;
-    bid["token"] = password;
-    bid["price"] = price;
-    bid["uuid"] = uuid;
-    
-    client_tcp_connection* new_connection = new client_tcp_connection();
-    new_connection->client_send(bid);
-    new_connection->client_recv();
-    new_connection->client_process_data(result);
-    delete new_connection;
-    
+    check_item->client_send(show_info);
+    check_item->client_recv();
+    check_item->client_process_data(result);
     if(result){
-        cout << "出价成功 现价格为：" << price << endl;
+        json p = check_item->show_recv_json();
+        delete check_item;
+        cout << "该物品现价格为：" << p["price"] << endl;
+        cout << "该物品现主人为：" << p["owner"] << endl;
+        
+        bool djj = p["started_auction"];
+        if(djj == false){
+            cout << "该物品竞拍已结束或尚未开始" << endl;
+            return 0;
+        }
+        
+        cout << "输入您的出价：" << endl;
+        cin.clear();
+        fflush(stdin);
+        cin >> price;
+        
+        bid["opcode"] = 6;
+        bid["username"] = username;
+        bid["token"] = password;
+        bid["price"] = price;
+        bid["uuid"] = uuid;
+        
+        client_tcp_connection* new_connection = new client_tcp_connection();
+        new_connection->client_send(bid);
+        new_connection->client_recv();
+        new_connection->client_process_data(result);
+        delete new_connection;
+        
+        if(result){
+            cout << "出价成功 新价格为：" << price << endl;
+        }
+        else{
+            cout << "出价失败" << endl;
+        }
     }
     else{
-        cout << "出价失败" << endl;
+        cout << "物品不存在" << endl;
+        delete check_item;
+        return 0;
     }
     return 0;
+}
+
+bool AdminLoadItems(void){
+    json j;
+    bool result;
+    j["opcode"] = 7;
+    j["username"] = username;
+    j["token"] = password;
+    j["started"] = 0;
+    client_tcp_connection* tcp = new client_tcp_connection();
+    tcp->client_send(j);
+    tcp->client_recv();
+    tcp->client_process_data(result);
+    delete tcp;
+    
+    if(result == true){
+        bool end_of_list = false;
+        while(end_of_list == false){
+            j["opcode"] = 7;
+            j["username"] = username;
+            j["token"] = password;
+            j["started"] = 1;
+            client_tcp_connection* new_tcp = new client_tcp_connection();
+            new_tcp->client_send(j);
+            new_tcp->client_recv();
+            json djj = new_tcp->show_recv_json();
+            cout << "物品UUID：" << djj["uuid"] << endl << "物品名：" << djj["name"] << endl << "物品持有者：" << djj["owner"] << endl << endl;
+            end_of_list = djj["end"];
+        }
+    }
+    
+    return result;
 }

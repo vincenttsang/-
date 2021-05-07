@@ -34,6 +34,7 @@ int UserMenu(void);
 int BidMenu(void);
 bool ClientUserLogin(std::string username, std::string password);
 bool ClientRegisterUser(std::string username, std::string password);
+bool AdminLoadItems(void);
 
 //Functions From client.cpp:
 bool RecordInformation(void);
